@@ -28,9 +28,9 @@
             font-weight: 600;
             text-transform: capitalize;
         }
-        .status-pending { background-color: #fef3c7; color: #92400e; }
-        .status-confirmed { background-color: #d1fae5; color: #065f46; }
-        .status-cancelled { background-color: #fee2e2; color: #991b1b; }
+        .status-pendente { background-color: #fef3c7; color: #92400e; }
+        .status-confirmado { background-color: #d1fae5; color: #065f46; }
+        .status-cancelado { background-color: #fee2e2; color: #991b1b; }
         .service-card-selected, .time-button-selected {
             border-color: #4f46e5;
             background-color: #eff6ff;
@@ -301,7 +301,7 @@
             if (!appointmentData.date) return;
 
             const bookedTimes = allAppointments
-                .filter(app => app.date === appointmentData.date && (app.status === 'pending' || app.status === 'confirmed'))
+                .filter(app => app.date === appointmentData.date && (app.status === 'pendente' || app.status === 'confirmado'))
                 .map(app => app.time);
 
             const unavailableTimes = blockedSlots
@@ -400,7 +400,7 @@
                 service: appointmentData.service,
                 date: appointmentData.date,
                 time: appointmentData.time,
-                status: 'pending',
+                status: 'pendente',
                 createdAt: new Date().toISOString()
             };
 
@@ -452,9 +452,9 @@
 
             appointments.forEach(app => {
                 const statusClass = {
-                    'pending': 'status-pending',
-                    'confirmed': 'status-confirmed',
-                    'cancelled': 'status-cancelled'
+                    'pendente': 'status-pendente',
+                    'confirmado': 'status-confirmado',
+                    'cancelado': 'status-cancelado'
                 }[app.status] || 'bg-slate-100 text-slate-800';
 
                 const formattedDate = formatDate(app.date);
@@ -467,7 +467,7 @@
                         </div>
                         <div class="text-sm text-slate-600 space-y-1">
                             <p><i class="fas fa-calendar-alt w-5 text-slate-400"></i> <span class="font-semibold">${formattedDate}</span> às <span class="font-semibold">${app.time}</span></p>
-                            <p><i class="fas fa-real-sign w-5 text-slate-400"></i> Preço: <span class="font-semibold">R$ ${servicePrices[app.service] ? servicePrices[app.service].toFixed(2).replace('.', ',') : 'N/A'}</span></p>
+                            <p><i class="fas fa-dollar-sign w-5 text-slate-400"></i> Preço: <span class="font-semibold">R$ ${servicePrices[app.service] ? servicePrices[app.service].toFixed(2).replace('.', ',') : 'N/A'}</span></p>
                         </div>
                     </div>
                 `;
@@ -524,7 +524,7 @@
                 service,
                 date,
                 time,
-                status: 'confirmed',
+                status: 'confirmado',
                 createdAt: new Date().toISOString()
             };
 
@@ -611,19 +611,19 @@
 
             appointments.forEach(app => {
                 const statusClass = {
-                    'pending': 'status-pending',
-                    'confirmed': 'status-confirmed',
-                    'cancelled': 'status-cancelled'
+                    'pendente': 'status-pendente',
+                    'confirmado': 'status-confirmado',
+                    'cancelado': 'status-cancelado'
                 }[app.status] || 'bg-slate-100 text-slate-800';
 
                 const formattedDate = formatDate(app.date);
 
                 const actionButtons = `
                     <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mt-4">
-                        <button class="w-full bg-green-500 text-white font-bold py-2 rounded-lg hover:bg-green-600 transition duration-300 transform hover:scale-105" onclick="updateAppointmentStatus('${app.docId}', 'confirmed')">
+                        <button class="w-full bg-green-500 text-white font-bold py-2 rounded-lg hover:bg-green-600 transition duration-300 transform hover:scale-105" onclick="updateAppointmentStatus('${app.docId}', 'confirmado')">
                             <i class="fas fa-check mr-2"></i> Confirmar
                         </button>
-                        <button class="w-full bg-red-500 text-white font-bold py-2 rounded-lg hover:bg-red-600 transition duration-300 transform hover:scale-105" onclick="updateAppointmentStatus('${app.docId}', 'cancelled')">
+                        <button class="w-full bg-red-500 text-white font-bold py-2 rounded-lg hover:bg-red-600 transition duration-300 transform hover:scale-105" onclick="updateAppointmentStatus('${app.docId}', 'cancelado')">
                             <i class="fas fa-times mr-2"></i> Cancelar
                         </button>
                     </div>
@@ -648,12 +648,12 @@
                         </div>
                         <div class="text-sm text-slate-600 space-y-1">
                             <p><i class="fas fa-cut w-5 text-slate-400"></i> Serviço: <span class="font-semibold">${app.service}</span></p>
-                            <p><i class="fas fa-real-sign w-5 text-slate-400"></i> Preço: <span class="font-semibold">R$ ${servicePrices[app.service] ? servicePrices[app.service].toFixed(2).replace('.', ',') : 'N/A'}</span></p>
+                            <p><i class="fas fa-do-sign w-5 text-slate-400"></i> Preço: <span class="font-semibold">R$ ${servicePrices[app.service] ? servicePrices[app.service].toFixed(2).replace('.', ',') : 'N/A'}</span></p>
                             <p><i class="fas fa-calendar-alt w-5 text-slate-400"></i> Data: <span class="font-semibold">${formattedDate}</span> às <span class="font-semibold">${app.time}</span></p>
                             <p><i class="fas fa-phone-alt w-5 text-slate-400"></i> Telefone: <span class="font-semibold">${app.phone}</span></p>
                         </div>
                         
-                        ${app.status === 'pending' ? actionButtons : ''}
+                        ${app.status === 'pendente' ? actionButtons : ''}
                         ${actionLinks}
                     </div>
                 `;
@@ -685,9 +685,9 @@
         window.createWhatsAppLink = (phone, name, date, time, service, status) => {
             const formattedDate = formatDate(date);
             const statusMessage = {
-                'pending': `Olá ${name}, recebemos seu pedido de agendamento para ${service} no dia ${formattedDate} às ${time}. Assim que for confirmado, te avisaremos!`,
-                'confirmed': `Olá ${name}, seu agendamento para ${service} no dia ${formattedDate} às ${time} foi CONFIRMADO! Estamos te esperando.`,
-                'cancelled': `Olá ${name}, infelizmente precisamos CANCELAR seu agendamento para ${service} no dia ${formattedDate} às ${time}. Por favor, entre em contato para reagendar.`
+                'pendente': `Olá ${name}, recebemos seu pedido de agendamento para ${service} no dia ${formattedDate} às ${time}. Assim que for confirmado, te avisaremos!`,
+                'confirmado': `Olá ${name}, seu agendamento para ${service} no dia ${formattedDate} às ${time} foi CONFIRMADO! Estamos te esperando.`,
+                'cancelado': `Olá ${name}, infelizmente precisamos CANCELAR seu agendamento para ${service} no dia ${formattedDate} às ${time}. Por favor, entre em contato para reagendar.`
             }[status];
             const message = encodeURIComponent(statusMessage);
             return `https://wa.me/${phone}?text=${message}`;
@@ -706,4 +706,5 @@
     </script>
 </body>
 </html>
+
 
