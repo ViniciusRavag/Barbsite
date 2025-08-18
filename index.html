@@ -467,7 +467,7 @@
                         </div>
                         <div class="text-sm text-slate-600 space-y-1">
                             <p><i class="fas fa-calendar-alt w-5 text-slate-400"></i> <span class="font-semibold">${formattedDate}</span> às <span class="font-semibold">${app.time}</span></p>
-                            <p><i class="fas fa-dollar-sign w-5 text-slate-400"></i> Preço: <span class="font-semibold">R$ ${servicePrices[app.service] ? servicePrices[app.service].toFixed(2).replace('.', ',') : 'N/A'}</span></p>
+                            <p><i class="fas fa-real-sign w-5 text-slate-400"></i> Preço: <span class="font-semibold">R$ ${servicePrices[app.service] ? servicePrices[app.service].toFixed(2).replace('.', ',') : 'N/A'}</span></p>
                         </div>
                     </div>
                 `;
@@ -648,7 +648,7 @@
                         </div>
                         <div class="text-sm text-slate-600 space-y-1">
                             <p><i class="fas fa-cut w-5 text-slate-400"></i> Serviço: <span class="font-semibold">${app.service}</span></p>
-                            <p><i class="fas fa-dollar-sign w-5 text-slate-400"></i> Preço: <span class="font-semibold">R$ ${servicePrices[app.service] ? servicePrices[app.service].toFixed(2).replace('.', ',') : 'N/A'}</span></p>
+                            <p><i class="fas fa-real-sign w-5 text-slate-400"></i> Preço: <span class="font-semibold">R$ ${servicePrices[app.service] ? servicePrices[app.service].toFixed(2).replace('.', ',') : 'N/A'}</span></p>
                             <p><i class="fas fa-calendar-alt w-5 text-slate-400"></i> Data: <span class="font-semibold">${formattedDate}</span> às <span class="font-semibold">${app.time}</span></p>
                             <p><i class="fas fa-phone-alt w-5 text-slate-400"></i> Telefone: <span class="font-semibold">${app.phone}</span></p>
                         </div>
@@ -706,3 +706,4 @@
     </script>
 </body>
 </html>
+
