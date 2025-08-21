@@ -58,10 +58,6 @@ color: #1a1a1a;
 background: linear-gradient(135deg, #ef4444, #dc2626);
 color: #f5f1e8;
 }
-.status-realizado {
-background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-color: #f5f1e8;
-}
 .service-card-selected, .time-button-selected {
 border-color: var(--accent-gold);
 background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 0.05));
@@ -166,6 +162,7 @@ from-yellow-400 to-yellow-600">Barber Shop</h1>
 <p class="text-warm-gray mt-2 font-medium">Agende seu horário ou gerencie a
 agenda.</p>
 </div>
+
 <!-- Modal de Notificação -->
 <div id="modal" class="fixed inset-0 modal-backdrop hidden flex items-center justify-center
 p-4 z-50">
@@ -176,6 +173,7 @@ animate-fade-in">
 duration-300 transform hover:scale-105 font-bold">Fechar</button>
 </div>
 </div>
+
 <!-- Modal para Adicionar Agendamento do Barbeiro -->
 <div id="barber-add-modal" class="fixed inset-0 modal-backdrop hidden flex items-center
 justify-center p-4 z-50">
@@ -207,6 +205,7 @@ duration-300 transform hover:scale-105 shadow-lg">Adicionar Agendamento</button>
 </form>
 </div>
 </div>
+
 <!-- View do Cliente -->
 <div id="client-view">
 <h2 class="text-2xl font-bold heading-font text-cream mb-6 text-center">Agendar um
@@ -233,6 +232,7 @@ Próximo <i class="fas fa-arrow-right ml-2"></i>
 </button>
 </div>
 </div>
+
 <!-- Etapa 2: Seleção do Serviço -->
 <div id="step-2" class="step hidden animate-fade-in">
 <h3 class="text-xl font-bold heading-font text-cream mb-4">2. Selecione o Serviço</h3>
@@ -248,6 +248,7 @@ transition duration-300 transform hover:scale-105">
 <i class="fas fa-arrow-left mr-2"></i> Voltar
 </button>
 </div>
+
 <!-- Etapa 3: Seleção de Data e Hora -->
 <div id="step-3" class="step hidden animate-fade-in">
 <h3 class="text-xl font-bold heading-font text-cream mb-4">3. Escolha a Data e Hora</h3>
@@ -271,6 +272,7 @@ transition duration-300 transform hover:scale-105">
 </button>
 </div>
 </div>
+
 <hr class="my-8 border-yellow-600 border-opacity-30">
 <div class="text-center">
 <h3 class="text-xl font-bold heading-font text-cream mb-4">Seus Agendamentos</h3>
@@ -279,6 +281,7 @@ transition duration-300 transform hover:scale-105">
 </div>
 </div>
 </div>
+
 <!-- View do Barbeiro -->
 <div id="barber-view" class="hidden">
 <h2 class="text-3xl font-extrabold heading-font text-transparent bg-clip-text bg-gradient-to-r
@@ -323,13 +326,16 @@ shadow-md">
 </div>
 </div>
 </div>
+
 <!-- Painel de Análise -->
 <div id="analytics-view" class="hidden">
   <h2 class="text-3xl font-extrabold heading-font text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600 mb-6 text-center">Painel de Análise</h2>
+  
   <div id="analytics-login" class="space-y-4">
     <input type="password" id="analytics-password" placeholder="Senha de Acesso" class="w-full p-3 input-dark rounded-xl focus:outline-none transition duration-200">
     <button id="login-analytics-btn" class="w-full bg-gray-800 text-cream font-bold py-3 rounded-xl hover:bg-gray-700 transition duration-300 transform hover:scale-105 shadow-lg border border-yellow-600 border-opacity-30">Entrar</button>
   </div>
+
   <div id="analytics-dashboard" class="hidden space-y-6">
     <!-- Filtros -->
     <div class="dark-card p-6 rounded-2xl shadow-md">
@@ -360,6 +366,7 @@ shadow-md">
         </div>
       </div>
     </div>
+
     <!-- Cards de Métricas Principais -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       <!-- Total de Agendamentos -->
@@ -374,6 +381,7 @@ shadow-md">
           </div>
         </div>
       </div>
+
       <!-- Agendamentos Confirmados -->
       <div class="glass-card p-6 rounded-2xl shadow-lg hover:shadow-xl transition duration-300">
         <div class="flex items-center justify-between">
@@ -386,6 +394,7 @@ shadow-md">
           </div>
         </div>
       </div>
+
       <!-- Agendamentos Pendentes -->
       <div class="glass-card p-6 rounded-2xl shadow-lg hover:shadow-xl transition duration-300">
         <div class="flex items-center justify-between">
@@ -398,6 +407,7 @@ shadow-md">
           </div>
         </div>
       </div>
+
       <!-- Agendamentos Cancelados -->
       <div class="glass-card p-6 rounded-2xl shadow-lg hover:shadow-xl transition duration-300">
         <div class="flex items-center justify-between">
@@ -411,6 +421,7 @@ shadow-md">
         </div>
       </div>
     </div>
+
     <!-- Cards de Faturamento -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <!-- Faturamento Realizado -->
@@ -421,14 +432,15 @@ shadow-md">
         </h3>
         <div class="space-y-3">
           <div class="flex justify-between items-center">
-            <span class="text-warm-gray">Serviços Realizados:</span>
-            <span id="realized-revenue" class="text-2xl font-bold text-green-400">R$ 0,00</span>
+            <span class="text-warm-gray">Serviços Confirmados:</span>
+            <span id="confirmed-revenue" class="text-2xl font-bold text-green-400">R$ 0,00</span>
           </div>
           <div class="text-sm text-warm-gray">
-            <p>Baseado em agendamentos marcados como realizados</p>
+            <p>Baseado em agendamentos confirmados</p>
           </div>
         </div>
       </div>
+
       <!-- Faturamento Estimado -->
       <div class="dark-card p-6 rounded-2xl shadow-md">
         <h3 class="text-xl font-bold heading-font text-cream mb-4 flex items-center">
@@ -446,14 +458,79 @@ shadow-md">
         </div>
       </div>
     </div>
+
+    <!-- Análise por Serviços -->
+    <div class="dark-card p-6 rounded-2xl shadow-md">
+      <h3 class="text-xl font-bold heading-font text-cream mb-4">Análise por Serviços</h3>
+      <div id="services-analysis" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Será preenchido dinamicamente -->
+      </div>
+    </div>
+
+    <!-- Gráfico de Status -->
+    <div class="dark-card p-6 rounded-2xl shadow-md">
+      <h3 class="text-xl font-bold heading-font text-cream mb-4">Distribuição de Status</h3>
+      <div class="flex flex-wrap justify-center items-center space-x-6 space-y-4">
+        <div id="status-chart" class="w-full max-w-md">
+          <!-- Gráfico simples com barras -->
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-green-400">Confirmados</span>
+              <div class="flex-1 mx-4 bg-gray-700 rounded-full h-4 overflow-hidden">
+                <div id="confirmed-bar" class="bg-green-400 h-full transition-all duration-500" style="width: 0%"></div>
+              </div>
+              <span id="confirmed-percent" class="text-cream font-bold">0%</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-yellow-400">Pendentes</span>
+              <div class="flex-1 mx-4 bg-gray-700 rounded-full h-4 overflow-hidden">
+                <div id="pending-bar" class="bg-yellow-400 h-full transition-all duration-500" style="width: 0%"></div>
+              </div>
+              <span id="pending-percent" class="text-cream font-bold">0%</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-red-400">Cancelados</span>
+              <div class="flex-1 mx-4 bg-gray-700 rounded-full h-4 overflow-hidden">
+                <div id="canceled-bar" class="bg-red-400 h-full transition-all duration-500" style="width: 0%</div>
+              </div>
+              <span id="canceled-percent" class="text-cream font-bold">0%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detalhamento Mensal -->
+    <div class="dark-card p-6 rounded-2xl shadow-md">
+      <h3 class="text-xl font-bold heading-font text-cream mb-4">Resumo por Período</h3>
+      <div id="period-summary" class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-yellow-600 border-opacity-30">
+              <th class="text-left py-3 text-cream font-semibold">Período</th>
+              <th class="text-center py-3 text-cream font-semibold">Agendamentos</th>
+              <th class="text-center py-3 text-cream font-semibold">Confirmados</th>
+              <th class="text-center py-3 text-cream font-semibold">Cancelados</th>
+              <th class="text-right py-3 text-cream font-semibold">Faturamento</th>
+            </tr>
+          </thead>
+          <tbody id="period-summary-body" class="text-warm-gray">
+            <!-- Será preenchido dinamicamente -->
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>
+
 </div>
+
 <!-- Firebase SDKs -->
 <script type="module">
 // Configuração Firebase simplificada
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
 // Configuração Firebase (mantenha sua configuração original)
 const firebaseConfig = {
   apiKey: "AIzaSyCgx6yZxS8w54CMTcX_dql7NNDJq5uhEn0",
@@ -463,22 +540,27 @@ const firebaseConfig = {
   messagingSenderId: "612905646934",
   appId: "1:612905646934:web:d4715b8eb14bc7d821f4f7"
 };
+
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
 // Constantes
 const BARBER_PASSWORD = 'senha123';
 const ANALYTICS_PASSWORD = 'analytics123';
+
 const availableTimes = [
   '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
   '13:00', '13:30', '14:00', '14:30', '15:00', '15:30',
   '16:00', '16:30', '17:00', '17:30', '18:00', '18:30'
 ];
+
 const servicePrices = {
   "Corte de Cabelo": 45.00,
   "Barba": 30.00,
   "Cabelo e Barba": 70.00,
   "Pigmentação": 60.00
 };
+
 // Variáveis globais
 let appointmentData = {
   name: '',
@@ -496,17 +578,20 @@ let currentFilters = {
   endDate: null,
   period: 'all'
 };
+
 // --- Funções Utilitárias ---
 function showModal(message) {
   const modal = document.getElementById('modal');
   document.getElementById('modal-message').textContent = message;
   modal.classList.remove('hidden');
 }
+
 function formatDate(dateString) {
   if (!dateString) return '';
   const [year, month, day] = dateString.split('-');
   return `${day}/${month}/${year}`;
 }
+
 function getNextSevenDays() {
   const dates = [];
   for (let i = 0; i < 7; i++) {
@@ -523,17 +608,21 @@ function getNextSevenDays() {
   }
   return dates;
 }
+
 // --- Navegação entre Views ---
 function checkURLView() {
   const urlParams = new URLSearchParams(window.location.search);
   const view = urlParams.get('view');
+  
   const clientView = document.getElementById('client-view');
   const barberView = document.getElementById('barber-view');
   const analyticsView = document.getElementById('analytics-view');
+
   // Esconder todas as views
   clientView.classList.add('hidden');
   barberView.classList.add('hidden');
   analyticsView.classList.add('hidden');
+
   if (view === 'barber') {
     barberView.classList.remove('hidden');
   } else if (view === 'analytics') {
@@ -542,11 +631,13 @@ function checkURLView() {
     clientView.classList.remove('hidden');
   }
 }
+
 // --- Renderização de Componentes ---
 function renderDateButtons() {
   const container = document.getElementById('date-picker-container');
   container.innerHTML = '';
   const dates = getNextSevenDays();
+  
   dates.forEach(d => {
     const button = document.createElement('button');
     button.className = `p-4 flex flex-col items-center justify-center date-button rounded-xl transition-colors`;
@@ -562,18 +653,24 @@ function renderDateButtons() {
     container.appendChild(button);
   });
 }
+
 function renderTimeButtons() {
   const container = document.getElementById('time-picker-container');
   container.innerHTML = '';
+  
   if (!appointmentData.date) return;
+
   const bookedTimes = allAppointments
     .filter(app => app.date === appointmentData.date && (app.status === 'pendente' || app.status === 'confirmado'))
     .map(app => app.time);
+
   const unavailableTimes = blockedSlots
     .filter(slot => slot.date === appointmentData.date)
     .map(slot => slot.time);
+
   const allUnavailable = new Set([...bookedTimes, ...unavailableTimes]);
   const availableTimesForDate = availableTimes.filter(time => !allUnavailable.has(time));
+
   if (availableTimesForDate.length === 0) {
     container.innerHTML = '<p class="text-center text-warm-gray col-span-full">Nenhum horário disponível.</p>';
   } else {
@@ -592,6 +689,7 @@ function renderTimeButtons() {
     });
   }
 }
+
 function updateStep3ButtonState() {
   const button = document.getElementById('next-step-3-btn');
   if (appointmentData.date && appointmentData.time) {
@@ -602,6 +700,7 @@ function updateStep3ButtonState() {
     button.className = 'w-full btn-disabled font-bold py-3 rounded-xl mt-6 shadow-lg';
   }
 }
+
 function renderServiceCards() {
   const container = document.getElementById('service-options');
   container.innerHTML = '';
@@ -612,6 +711,7 @@ function renderServiceCards() {
     "Cabelo e Barba": "fas fa-hair-alt",
     "Pigmentação": "fas fa-palette"
   };
+
   services.forEach(service => {
     const card = document.createElement('div');
     card.className = `service-card p-6 rounded-xl shadow-sm transition duration-200 cursor-pointer`;
@@ -634,17 +734,20 @@ function renderServiceCards() {
     container.appendChild(card);
   });
 }
+
 // --- Navegação entre Etapas ---
 function showStep(step) {
   document.querySelectorAll('.step').forEach(el => el.classList.add('hidden'));
   document.getElementById(`step-${step}`).classList.remove('hidden');
   currentStep = step;
+  
   if (currentStep === 2) renderServiceCards();
   if (currentStep === 3) {
     renderDateButtons();
     renderTimeButtons();
   }
 }
+
 function resetClientUI() {
   appointmentData = { name: '', phone: '', service: null, date: null, time: null };
   document.getElementById('client-name').value = '';
@@ -652,29 +755,35 @@ function resetClientUI() {
   renderClientAppointments();
   showStep(1);
 }
+
 // --- Agendamentos do Cliente ---
 function renderClientAppointments() {
   const list = document.getElementById('client-appointments-list');
   list.innerHTML = '';
+  
   // Buscar agendamentos do cliente no Firebase baseado no telefone
   const clientPhone = document.getElementById('client-phone').value;
   if (!clientPhone) {
     list.innerHTML = '<p class="text-center text-warm-gray">Digite seu telefone para ver seus agendamentos.</p>';
     return;
   }
+
   const clientAppointments = allAppointments.filter(app => app.phone === clientPhone);
+  
   if (clientAppointments.length === 0) {
     list.innerHTML = '<p class="text-center text-warm-gray">Nenhum agendamento encontrado.</p>';
     return;
   }
+
   clientAppointments.forEach(app => {
     const statusClass = {
       'pendente': 'status-pendente',
       'confirmado': 'status-confirmado',
-      'cancelado': 'status-cancelado',
-      'realizado': 'status-realizado'
+      'cancelado': 'status-cancelado'
     }[app.status] || 'bg-gray-100 text-gray-800';
+    
     const formattedDate = formatDate(app.date);
+    
     list.innerHTML += `
       <div class="dark-card p-5 rounded-xl shadow-sm hover:shadow-md transition duration-200">
         <div class="flex justify-between items-center mb-2">
@@ -689,6 +798,7 @@ function renderClientAppointments() {
     `;
   });
 }
+
 // --- Funções Firebase ---
 async function submitAppointment() {
   const newAppointment = {
@@ -700,15 +810,17 @@ async function submitAppointment() {
     status: 'pendente',
     createdAt: new Date().toISOString()
   };
+
   try {
     await addDoc(collection(db, 'appointments'), newAppointment);
     showModal('Agendamento realizado com sucesso! Aguarde a confirmação do barbeiro.');
     resetClientUI();
   } catch (error) {
     console.error("Erro ao agendar:", error);
-    showModal('Ocorreu um erro ao agendar. Verifique sua conexão e tente novamente.');
+    showModal('Ocorreu um erro ao agendar. Tente novamente.');
   }
 }
+
 function setupFirebaseListeners() {
   // Listener para agendamentos
   const appointmentsColRef = collection(db, 'appointments');
@@ -721,8 +833,8 @@ function setupFirebaseListeners() {
     if (currentStep === 3) renderTimeButtons();
   }, (error) => {
     console.error("Erro ao buscar agendamentos:", error);
-    showModal('Erro ao carregar agendamentos. Verifique sua conexão.');
   });
+
   // Listener para slots bloqueados
   const blockedSlotsColRef = collection(db, 'blocked-slots');
   onSnapshot(blockedSlotsColRef, (querySnapshot) => {
@@ -735,57 +847,44 @@ function setupFirebaseListeners() {
     console.error("Erro ao buscar horários bloqueados:", error);
   });
 }
+
 function renderBarberAppointments(appointments) {
   const list = document.getElementById('barber-appointments-list');
   list.innerHTML = '';
+  
   if (appointments.length === 0) {
     list.innerHTML = '<p class="text-center text-warm-gray">Nenhum agendamento encontrado.</p>';
     return;
   }
+
   appointments.sort((a, b) => {
     const dateA = new Date(`${a.date}T${a.time}`);
     const dateB = new Date(`${b.date}T${b.time}`);
     return dateA - dateB;
   });
+
   appointments.forEach(app => {
     const statusClass = {
       'pendente': 'status-pendente',
       'confirmado': 'status-confirmado',
-      'cancelado': 'status-cancelado',
-      'realizado': 'status-realizado'
+      'cancelado': 'status-cancelado'
     }[app.status] || 'bg-gray-100 text-gray-800';
+    
     const formattedDate = formatDate(app.date);
     
-    // Botões de ação baseados no status
-    let actionButtons = '';
-    if (app.status === 'pendente') {
-      actionButtons = `
-        <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mt-4">
-          <button class="w-full bg-green-500 text-gray-900 font-bold py-2 rounded-lg hover:bg-green-400 transition duration-300 transform hover:scale-105"
-            onclick="updateAppointmentStatus('${app.docId}', 'confirmado')">
-            <i class="fas fa-check mr-2"></i> Confirmar
-          </button>
-          <button class="w-full bg-red-500 text-cream font-bold py-2 rounded-lg hover:bg-red-400 transition duration-300 transform hover:scale-105"
-            onclick="updateAppointmentStatus('${app.docId}', 'cancelado')">
-            <i class="fas fa-times mr-2"></i> Cancelar
-          </button>
-        </div>
-      `;
-    } else if (app.status === 'confirmado') {
-      actionButtons = `
-        <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mt-4">
-          <button class="w-full bg-blue-500 text-cream font-bold py-2 rounded-lg hover:bg-blue-400 transition duration-300 transform hover:scale-105"
-            onclick="updateAppointmentStatus('${app.docId}', 'realizado')">
-            <i class="fas fa-check-double mr-2"></i> Realizado
-          </button>
-          <button class="w-full bg-red-500 text-cream font-bold py-2 rounded-lg hover:bg-red-400 transition duration-300 transform hover:scale-105"
-            onclick="updateAppointmentStatus('${app.docId}', 'cancelado')">
-            <i class="fas fa-times mr-2"></i> Cancelar
-          </button>
-        </div>
-      `;
-    }
-    
+    const actionButtons = app.status === 'pendente' ? `
+      <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mt-4">
+        <button class="w-full bg-green-500 text-gray-900 font-bold py-2 rounded-lg hover:bg-green-400 transition duration-300 transform hover:scale-105"
+          onclick="updateAppointmentStatus('${app.docId}', 'confirmado')">
+          <i class="fas fa-check mr-2"></i> Confirmar
+        </button>
+        <button class="w-full bg-red-500 text-cream font-bold py-2 rounded-lg hover:bg-red-400 transition duration-300 transform hover:scale-105"
+          onclick="updateAppointmentStatus('${app.docId}', 'cancelado')">
+          <i class="fas fa-times mr-2"></i> Cancelar
+        </button>
+      </div>
+    ` : '';
+
     const actionLinks = `
       <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mt-4">
         <a href="${createWhatsAppLink(app.phone, app.name, app.date, app.time, app.service, app.status)}" target="_blank"
@@ -798,6 +897,7 @@ function renderBarberAppointments(appointments) {
         </button>
       </div>
     `;
+
     list.innerHTML += `
       <div class="dark-card p-6 rounded-2xl shadow-md hover:shadow-xl transition duration-200">
         <div class="flex items-center justify-between mb-2">
@@ -816,14 +916,17 @@ function renderBarberAppointments(appointments) {
     `;
   });
 }
+
 // --- Event Listeners ---
 document.getElementById('close-modal-btn').addEventListener('click', () => {
   document.getElementById('modal').classList.add('hidden');
 });
+
 // Navegação entre etapas do cliente
 document.getElementById('next-step-1-btn').addEventListener('click', () => {
   const nameInput = document.getElementById('client-name');
   const phoneInput = document.getElementById('client-phone');
+  
   if (nameInput.value.trim() && phoneInput.value.trim()) {
     appointmentData.name = nameInput.value.trim();
     appointmentData.phone = phoneInput.value.trim();
@@ -833,12 +936,15 @@ document.getElementById('next-step-1-btn').addEventListener('click', () => {
     showModal('Por favor, preencha todos os campos corretamente.');
   }
 });
+
 document.getElementById('back-step-2-btn').addEventListener('click', () => showStep(1));
 document.getElementById('next-step-2-btn').addEventListener('click', () => showStep(3));
 document.getElementById('back-step-3-btn').addEventListener('click', () => showStep(2));
 document.getElementById('next-step-3-btn').addEventListener('click', submitAppointment);
+
 // Input do telefone - atualizar lista quando mudado
 document.getElementById('client-phone').addEventListener('blur', renderClientAppointments);
+
 // Login do barbeiro
 document.getElementById('login-barber-btn').addEventListener('click', () => {
   const password = document.getElementById('barber-password').value;
@@ -849,21 +955,26 @@ document.getElementById('login-barber-btn').addEventListener('click', () => {
     showModal('Senha incorreta!');
   }
 });
+
 // Modal para adicionar agendamento
 document.getElementById('open-add-modal-btn').addEventListener('click', () => {
   document.getElementById('barber-add-modal').classList.remove('hidden');
 });
+
 document.getElementById('close-add-modal-btn').addEventListener('click', () => {
   document.getElementById('barber-add-modal').classList.add('hidden');
   document.getElementById('barber-add-form').reset();
 });
+
 document.getElementById('barber-add-form').addEventListener('submit', async (e) => {
   e.preventDefault();
+  
   const name = document.getElementById('barber-client-name').value;
   const phone = document.getElementById('barber-client-phone').value;
   const service = document.getElementById('barber-service-select').value;
   const date = document.getElementById('barber-appointment-date').value;
   const time = document.getElementById('barber-appointment-time').value;
+
   const newAppointment = {
     name,
     phone,
@@ -873,6 +984,7 @@ document.getElementById('barber-add-form').addEventListener('submit', async (e) 
     status: 'confirmado',
     createdAt: new Date().toISOString()
   };
+
   try {
     await addDoc(collection(db, 'appointments'), newAppointment);
     showModal('Agendamento adicionado com sucesso!');
@@ -880,17 +992,20 @@ document.getElementById('barber-add-form').addEventListener('submit', async (e) 
     document.getElementById('barber-add-modal').classList.add('hidden');
   } catch (error) {
     console.error("Erro ao adicionar agendamento:", error);
-    showModal('Ocorreu um erro ao adicionar o agendamento. Verifique sua conexão.');
+    showModal('Ocorreu um erro ao adicionar o agendamento.');
   }
 });
+
 // Bloquear/Desbloquear horários
 document.getElementById('block-btn').addEventListener('click', async () => {
   const date = document.getElementById('block-date').value;
   const time = document.getElementById('block-time').value;
+  
   if (!date || !time) {
     showModal('Selecione uma data e um horário para bloquear.');
     return;
   }
+
   try {
     await addDoc(collection(db, 'blocked-slots'), { date, time });
     showModal(`Horário ${time} na data ${formatDate(date)} foi bloqueado com sucesso!`);
@@ -898,19 +1013,23 @@ document.getElementById('block-btn').addEventListener('click', async () => {
     document.getElementById('block-time').value = '';
   } catch (error) {
     console.error("Erro ao bloquear horário:", error);
-    showModal('Ocorreu um erro ao bloquear o horário. Verifique sua conexão.');
+    showModal('Ocorreu um erro ao bloquear o horário.');
   }
 });
+
 document.getElementById('unblock-btn').addEventListener('click', async () => {
   const date = document.getElementById('block-date').value;
   const time = document.getElementById('block-time').value;
+  
   if (!date || !time) {
     showModal('Selecione uma data e um horário para desbloquear.');
     return;
   }
+
   try {
     const q = query(collection(db, 'blocked-slots'), where("date", "==", date), where("time", "==", time));
     const querySnapshot = await getDocs(q);
+    
     if (!querySnapshot.empty) {
       querySnapshot.forEach(async (docRef) => { 
         await deleteDoc(docRef.ref); 
@@ -923,9 +1042,10 @@ document.getElementById('unblock-btn').addEventListener('click', async () => {
     }
   } catch (error) {
     console.error("Erro ao desbloquear horário:", error);
-    showModal('Ocorreu um erro ao desbloquear o horário. Verifique sua conexão.');
+    showModal('Ocorreu um erro ao desbloquear o horário.');
   }
 });
+
 // Login Analytics
 document.getElementById('login-analytics-btn').addEventListener('click', () => {
   const password = document.getElementById('analytics-password').value;
@@ -937,12 +1057,14 @@ document.getElementById('login-analytics-btn').addEventListener('click', () => {
     showModal('Senha incorreta!');
   }
 });
+
 // --- Funções Analytics ---
 function initializeAnalytics() {
   setupAnalyticsListener();
   setDefaultDateRange();
   setupFilterEvents();
 }
+
 function setupAnalyticsListener() {
   const appointmentsColRef = collection(db, 'appointments');
   onSnapshot(appointmentsColRef, (querySnapshot) => {
@@ -955,18 +1077,23 @@ function setupAnalyticsListener() {
     console.error("Erro ao buscar agendamentos para análise:", error);
   });
 }
+
 function setDefaultDateRange() {
   const today = new Date();
   const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
+  
   document.getElementById('end-date').value = today.toISOString().split('T')[0];
   document.getElementById('start-date').value = lastMonth.toISOString().split('T')[0];
 }
+
 function setupFilterEvents() {
   document.getElementById('period-filter').addEventListener('change', (e) => {
     const period = e.target.value;
     currentFilters.period = period;
+    
     const today = new Date();
     let startDate, endDate;
+    
     switch(period) {
       case 'today':
         startDate = endDate = today.toISOString().split('T')[0];
@@ -986,6 +1113,7 @@ function setupFilterEvents() {
         startDate = endDate = null;
         break;
     }
+    
     if (startDate && endDate) {
       document.getElementById('start-date').value = startDate;
       document.getElementById('end-date').value = endDate;
@@ -993,20 +1121,25 @@ function setupFilterEvents() {
       document.getElementById('start-date').value = '';
       document.getElementById('end-date').value = '';
     }
+    
     updateAnalytics();
   });
+
   document.getElementById('apply-filters-btn').addEventListener('click', () => {
     currentFilters.startDate = document.getElementById('start-date').value;
     currentFilters.endDate = document.getElementById('end-date').value;
     updateAnalytics();
   });
 }
+
 function filterAppointmentsByPeriod(appointments) {
   const startDate = document.getElementById('start-date').value;
   const endDate = document.getElementById('end-date').value;
+  
   if (!startDate && !endDate) {
     return appointments;
   }
+  
   return appointments.filter(app => {
     const appDate = app.date;
     if (startDate && appDate < startDate) return false;
@@ -1014,34 +1147,168 @@ function filterAppointmentsByPeriod(appointments) {
     return true;
   });
 }
+
 function updateAnalytics() {
   const filteredAppointments = filterAppointmentsByPeriod(analyticsAppointments);
+  
   updateMainMetrics(filteredAppointments);
   updateRevenueMetrics(filteredAppointments);
+  updateServicesAnalysis(filteredAppointments);
+  updateStatusChart(filteredAppointments);
+  updatePeriodSummary(filteredAppointments);
 }
+
 function updateMainMetrics(appointments) {
   const total = appointments.length;
   const confirmed = appointments.filter(app => app.status === 'confirmado').length;
   const pending = appointments.filter(app => app.status === 'pendente').length;
   const canceled = appointments.filter(app => app.status === 'cancelado').length;
-  const realized = appointments.filter(app => app.status === 'realizado').length;
+  
   document.getElementById('total-appointments').textContent = total;
   document.getElementById('confirmed-appointments').textContent = confirmed;
   document.getElementById('pending-appointments').textContent = pending;
   document.getElementById('canceled-appointments').textContent = canceled;
 }
+
 function updateRevenueMetrics(appointments) {
-  const realizedRevenue = appointments
-    .filter(app => app.status === 'realizado')
+  const confirmedRevenue = appointments
+    .filter(app => app.status === 'confirmado')
     .reduce((sum, app) => sum + (servicePrices[app.service] || 0), 0);
+
   const estimatedRevenue = appointments
     .filter(app => app.status === 'confirmado' || app.status === 'pendente')
     .reduce((sum, app) => sum + (servicePrices[app.service] || 0), 0);
-  document.getElementById('realized-revenue').textContent = 
-    'R$ ' + realizedRevenue.toFixed(2).replace('.', ',');
+
+  document.getElementById('confirmed-revenue').textContent = 
+    'R$ ' + confirmedRevenue.toFixed(2).replace('.', ',');
   document.getElementById('estimated-revenue').textContent = 
     'R$ ' + estimatedRevenue.toFixed(2).replace('.', ',');
 }
+
+function updateServicesAnalysis(appointments) {
+  const container = document.getElementById('services-analysis');
+  container.innerHTML = '';
+  
+  const serviceStats = {};
+  
+  appointments.forEach(app => {
+    if (!serviceStats[app.service]) {
+      serviceStats[app.service] = {
+        total: 0,
+        confirmed: 0,
+        pending: 0,
+        canceled: 0,
+        revenue: 0
+      };
+    }
+    
+    serviceStats[app.service].total++;
+    serviceStats[app.service][app.status]++;
+    
+    if (app.status === 'confirmado') {
+      serviceStats[app.service].revenue += servicePrices[app.service] || 0;
+    }
+  });
+  
+  Object.keys(serviceStats).forEach(service => {
+    const stats = serviceStats[service];
+    const serviceCard = document.createElement('div');
+    serviceCard.className = 'glass-card p-4 rounded-xl';
+    serviceCard.innerHTML = `
+      <h4 class="font-bold text-cream mb-2">${service}</h4>
+      <div class="space-y-1 text-sm">
+        <p class="text-warm-gray">Total: <span class="text-cream font-semibold">${stats.total}</span></p>
+        <p class="text-warm-gray">Confirmados: <span class="text-green-400 font-semibold">${stats.confirmed}</span></p>
+        <p class="text-warm-gray">Faturamento: <span class="text-yellow-400 font-semibold">R$ ${stats.revenue.toFixed(2).replace('.', ',')}</span></p>
+      </div>
+    `;
+    container.appendChild(serviceCard);
+  });
+}
+
+function updateStatusChart(appointments) {
+  const total = appointments.length;
+  if (total === 0) {
+    document.getElementById('confirmed-bar').style.width = '0%';
+    document.getElementById('pending-bar').style.width = '0%';
+    document.getElementById('canceled-bar').style.width = '0%';
+    document.getElementById('confirmed-percent').textContent = '0%';
+    document.getElementById('pending-percent').textContent = '0%';
+    document.getElementById('canceled-percent').textContent = '0%';
+    return;
+  }
+
+  const confirmed = appointments.filter(app => app.status === 'confirmado').length;
+  const pending = appointments.filter(app => app.status === 'pendente').length;
+  const canceled = appointments.filter(app => app.status === 'cancelado').length;
+
+  const confirmedPercent = ((confirmed / total) * 100).toFixed(1);
+  const pendingPercent = ((pending / total) * 100).toFixed(1);
+  const canceledPercent = ((canceled / total) * 100).toFixed(1);
+
+  setTimeout(() => {
+    document.getElementById('confirmed-bar').style.width = confirmedPercent + '%';
+    document.getElementById('pending-bar').style.width = pendingPercent + '%';
+    document.getElementById('canceled-bar').style.width = canceledPercent + '%';
+  }, 100);
+
+  document.getElementById('confirmed-percent').textContent = confirmedPercent + '%';
+  document.getElementById('pending-percent').textContent = pendingPercent + '%';
+  document.getElementById('canceled-percent').textContent = canceledPercent + '%';
+}
+
+function updatePeriodSummary(appointments) {
+  const tbody = document.getElementById('period-summary-body');
+  tbody.innerHTML = '';
+
+  if (appointments.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4">Nenhum agendamento encontrado</td></tr>';
+    return;
+  }
+
+  // Agrupar por mês
+  const monthlyData = {};
+  appointments.forEach(app => {
+    const date = new Date(app.date + 'T00:00:00');
+    const monthKey = date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0');
+    const monthName = date.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+
+    if (!monthlyData[monthKey]) {
+      monthlyData[monthKey] = {
+        name: monthName,
+        total: 0,
+        confirmed: 0,
+        canceled: 0,
+        revenue: 0
+      };
+    }
+
+    monthlyData[monthKey].total++;
+    if (app.status === 'confirmado') {
+      monthlyData[monthKey].confirmed++;
+      monthlyData[monthKey].revenue += servicePrices[app.service] || 0;
+    } else if (app.status === 'cancelado') {
+      monthlyData[monthKey].canceled++;
+    }
+  });
+
+  Object.keys(monthlyData)
+    .sort((a, b) => b.localeCompare(a))
+    .forEach(monthKey => {
+      const data = monthlyData[monthKey];
+      const row = document.createElement('tr');
+      row.className = 'border-b border-gray-700 border-opacity-50';
+      row.innerHTML = `
+        <td class="py-3">${data.name}</td>
+        <td class="text-center py-3">${data.total}</td>
+        <td class="text-center py-3 text-green-400">${data.confirmed}</td>
+        <td class="text-center py-3 text-red-400">${data.canceled}</td>
+        <td class="text-right py-3 text-yellow-400">R$ ${data.revenue.toFixed(2).replace('.', ',')}</td>
+      `;
+      tbody.appendChild(row);
+    });
+}
+
 // --- Funções Globais para uso em onclick ---
 window.updateAppointmentStatus = async (docId, newStatus) => {
   const appointmentRef = doc(db, 'appointments', docId);
@@ -1050,47 +1317,58 @@ window.updateAppointmentStatus = async (docId, newStatus) => {
     showModal("Status do agendamento atualizado com sucesso!");
   } catch (error) {
     console.error("Erro ao atualizar status:", error);
-    showModal("Erro ao atualizar o status do agendamento. Verifique sua conexão.");
+    showModal("Erro ao atualizar o status do agendamento.");
   }
 };
+
 window.deleteAppointment = async (docId) => {
   if (!confirm('Tem certeza que deseja excluir este agendamento?')) {
     return;
   }
+  
   const appointmentRef = doc(db, 'appointments', docId);
   try {
     await deleteDoc(appointmentRef);
     showModal("Agendamento excluído com sucesso!");
   } catch (error) {
     console.error("Erro ao excluir agendamento:", error);
-    showModal("Erro ao excluir o agendamento. Verifique sua conexão.");
+    showModal("Erro ao excluir o agendamento.");
   }
 };
+
 window.createWhatsAppLink = (phone, name, date, time, service, status) => {
   const formattedDate = formatDate(date);
   const statusMessage = {
     'pendente': `Olá ${name}, recebemos seu pedido de agendamento para ${service} no dia ${formattedDate} às ${time}. Assim que for confirmado, te avisaremos!`,
     'confirmado': `Olá ${name}, seu agendamento para ${service} no dia ${formattedDate} às ${time} foi CONFIRMADO! Estamos te esperando.`,
-    'cancelado': `Olá ${name}, infelizmente precisamos CANCELAR seu agendamento para ${service} no dia ${formattedDate} às ${time}. Por favor, entre em contato para reagendar.`,
-    'realizado': `Olá ${name}, seu agendamento para ${service} no dia ${formattedDate} às ${time} foi REALIZADO! Obrigado pela preferência!`
+    'cancelado': `Olá ${name}, infelizmente precisamos CANCELAR seu agendamento para ${service} no dia ${formattedDate} às ${time}. Por favor, entre em contato para reagendar.`
   }[status];
+  
   const message = encodeURIComponent(statusMessage);
   return `https://wa.me/${phone}?text=${message}`;
 };
+
 // --- Inicialização ---
 document.addEventListener('DOMContentLoaded', () => {
   console.log('DOM carregado, inicializando aplicação...');
+  
   // Verificar view da URL
   checkURLView();
+  
   // Configurar Firebase listeners
   setupFirebaseListeners();
+  
   // Configurar listener para mudanças na URL
   window.addEventListener('popstate', checkURLView);
+  
   console.log('Aplicação inicializada com sucesso!');
 });
+
 // Debug: Adicionar logs para verificar se o Firebase está conectando
 console.log('Firebase inicializado:', app);
 console.log('Firestore inicializado:', db);
+
 </script>
 </body>
 </html>
+
