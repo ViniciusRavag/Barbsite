@@ -58,6 +58,10 @@ color: #1a1a1a;
 background: linear-gradient(135deg, #ef4444, #dc2626);
 color: #f5f1e8;
 }
+.status-realizado {
+background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+color: #f5f1e8;
+}
 .service-card-selected, .time-button-selected {
 border-color: var(--accent-gold);
 background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 0.05));
@@ -421,7 +425,7 @@ shadow-md">
             <span id="realized-revenue" class="text-2xl font-bold text-green-400">R$ 0,00</span>
           </div>
           <div class="text-sm text-warm-gray">
-            <p>Baseado em agendamentos realizados</p>
+            <p>Baseado em agendamentos marcados como realizados</p>
           </div>
         </div>
       </div>
@@ -443,6 +447,7 @@ shadow-md">
       </div>
     </div>
   </div>
+</div>
 </div>
 <!-- Firebase SDKs -->
 <script type="module">
@@ -666,7 +671,8 @@ function renderClientAppointments() {
     const statusClass = {
       'pendente': 'status-pendente',
       'confirmado': 'status-confirmado',
-      'cancelado': 'status-cancelado'
+      'cancelado': 'status-cancelado',
+      'realizado': 'status-realizado'
     }[app.status] || 'bg-gray-100 text-gray-800';
     const formattedDate = formatDate(app.date);
     list.innerHTML += `
@@ -700,7 +706,7 @@ async function submitAppointment() {
     resetClientUI();
   } catch (error) {
     console.error("Erro ao agendar:", error);
-    showModal('Ocorreu um erro ao agendar. Tente novamente.');
+    showModal('Ocorreu um erro ao agendar. Verifique sua conexão e tente novamente.');
   }
 }
 function setupFirebaseListeners() {
@@ -715,6 +721,7 @@ function setupFirebaseListeners() {
     if (currentStep === 3) renderTimeButtons();
   }, (error) => {
     console.error("Erro ao buscar agendamentos:", error);
+    showModal('Erro ao carregar agendamentos. Verifique sua conexão.');
   });
   // Listener para slots bloqueados
   const blockedSlotsColRef = collection(db, 'blocked-slots');
@@ -744,21 +751,41 @@ function renderBarberAppointments(appointments) {
     const statusClass = {
       'pendente': 'status-pendente',
       'confirmado': 'status-confirmado',
-      'cancelado': 'status-cancelado'
+      'cancelado': 'status-cancelado',
+      'realizado': 'status-realizado'
     }[app.status] || 'bg-gray-100 text-gray-800';
     const formattedDate = formatDate(app.date);
-    const actionButtons = app.status === 'pendente' ? `
-      <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mt-4">
-        <button class="w-full bg-green-500 text-gray-900 font-bold py-2 rounded-lg hover:bg-green-400 transition duration-300 transform hover:scale-105"
-          onclick="updateAppointmentStatus('${app.docId}', 'confirmado')">
-          <i class="fas fa-check mr-2"></i> Confirmar
-        </button>
-        <button class="w-full bg-red-500 text-cream font-bold py-2 rounded-lg hover:bg-red-400 transition duration-300 transform hover:scale-105"
-          onclick="updateAppointmentStatus('${app.docId}', 'cancelado')">
-          <i class="fas fa-times mr-2"></i> Cancelar
-        </button>
-      </div>
-    ` : '';
+    
+    // Botões de ação baseados no status
+    let actionButtons = '';
+    if (app.status === 'pendente') {
+      actionButtons = `
+        <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mt-4">
+          <button class="w-full bg-green-500 text-gray-900 font-bold py-2 rounded-lg hover:bg-green-400 transition duration-300 transform hover:scale-105"
+            onclick="updateAppointmentStatus('${app.docId}', 'confirmado')">
+            <i class="fas fa-check mr-2"></i> Confirmar
+          </button>
+          <button class="w-full bg-red-500 text-cream font-bold py-2 rounded-lg hover:bg-red-400 transition duration-300 transform hover:scale-105"
+            onclick="updateAppointmentStatus('${app.docId}', 'cancelado')">
+            <i class="fas fa-times mr-2"></i> Cancelar
+          </button>
+        </div>
+      `;
+    } else if (app.status === 'confirmado') {
+      actionButtons = `
+        <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mt-4">
+          <button class="w-full bg-blue-500 text-cream font-bold py-2 rounded-lg hover:bg-blue-400 transition duration-300 transform hover:scale-105"
+            onclick="updateAppointmentStatus('${app.docId}', 'realizado')">
+            <i class="fas fa-check-double mr-2"></i> Realizado
+          </button>
+          <button class="w-full bg-red-500 text-cream font-bold py-2 rounded-lg hover:bg-red-400 transition duration-300 transform hover:scale-105"
+            onclick="updateAppointmentStatus('${app.docId}', 'cancelado')">
+            <i class="fas fa-times mr-2"></i> Cancelar
+          </button>
+        </div>
+      `;
+    }
+    
     const actionLinks = `
       <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mt-4">
         <a href="${createWhatsAppLink(app.phone, app.name, app.date, app.time, app.service, app.status)}" target="_blank"
@@ -853,7 +880,7 @@ document.getElementById('barber-add-form').addEventListener('submit', async (e) 
     document.getElementById('barber-add-modal').classList.add('hidden');
   } catch (error) {
     console.error("Erro ao adicionar agendamento:", error);
-    showModal('Ocorreu um erro ao adicionar o agendamento.');
+    showModal('Ocorreu um erro ao adicionar o agendamento. Verifique sua conexão.');
   }
 });
 // Bloquear/Desbloquear horários
@@ -871,7 +898,7 @@ document.getElementById('block-btn').addEventListener('click', async () => {
     document.getElementById('block-time').value = '';
   } catch (error) {
     console.error("Erro ao bloquear horário:", error);
-    showModal('Ocorreu um erro ao bloquear o horário.');
+    showModal('Ocorreu um erro ao bloquear o horário. Verifique sua conexão.');
   }
 });
 document.getElementById('unblock-btn').addEventListener('click', async () => {
@@ -896,7 +923,7 @@ document.getElementById('unblock-btn').addEventListener('click', async () => {
     }
   } catch (error) {
     console.error("Erro ao desbloquear horário:", error);
-    showModal('Ocorreu um erro ao desbloquear o horário.');
+    showModal('Ocorreu um erro ao desbloquear o horário. Verifique sua conexão.');
   }
 });
 // Login Analytics
@@ -997,20 +1024,21 @@ function updateMainMetrics(appointments) {
   const confirmed = appointments.filter(app => app.status === 'confirmado').length;
   const pending = appointments.filter(app => app.status === 'pendente').length;
   const canceled = appointments.filter(app => app.status === 'cancelado').length;
+  const realized = appointments.filter(app => app.status === 'realizado').length;
   document.getElementById('total-appointments').textContent = total;
   document.getElementById('confirmed-appointments').textContent = confirmed;
   document.getElementById('pending-appointments').textContent = pending;
   document.getElementById('canceled-appointments').textContent = canceled;
 }
 function updateRevenueMetrics(appointments) {
-  const confirmedRevenue = appointments
-    .filter(app => app.status === 'confirmado')
+  const realizedRevenue = appointments
+    .filter(app => app.status === 'realizado')
     .reduce((sum, app) => sum + (servicePrices[app.service] || 0), 0);
   const estimatedRevenue = appointments
     .filter(app => app.status === 'confirmado' || app.status === 'pendente')
     .reduce((sum, app) => sum + (servicePrices[app.service] || 0), 0);
-  document.getElementById('confirmed-revenue').textContent = 
-    'R$ ' + confirmedRevenue.toFixed(2).replace('.', ',');
+  document.getElementById('realized-revenue').textContent = 
+    'R$ ' + realizedRevenue.toFixed(2).replace('.', ',');
   document.getElementById('estimated-revenue').textContent = 
     'R$ ' + estimatedRevenue.toFixed(2).replace('.', ',');
 }
@@ -1022,7 +1050,7 @@ window.updateAppointmentStatus = async (docId, newStatus) => {
     showModal("Status do agendamento atualizado com sucesso!");
   } catch (error) {
     console.error("Erro ao atualizar status:", error);
-    showModal("Erro ao atualizar o status do agendamento.");
+    showModal("Erro ao atualizar o status do agendamento. Verifique sua conexão.");
   }
 };
 window.deleteAppointment = async (docId) => {
@@ -1035,7 +1063,7 @@ window.deleteAppointment = async (docId) => {
     showModal("Agendamento excluído com sucesso!");
   } catch (error) {
     console.error("Erro ao excluir agendamento:", error);
-    showModal("Erro ao excluir o agendamento.");
+    showModal("Erro ao excluir o agendamento. Verifique sua conexão.");
   }
 };
 window.createWhatsAppLink = (phone, name, date, time, service, status) => {
@@ -1043,7 +1071,8 @@ window.createWhatsAppLink = (phone, name, date, time, service, status) => {
   const statusMessage = {
     'pendente': `Olá ${name}, recebemos seu pedido de agendamento para ${service} no dia ${formattedDate} às ${time}. Assim que for confirmado, te avisaremos!`,
     'confirmado': `Olá ${name}, seu agendamento para ${service} no dia ${formattedDate} às ${time} foi CONFIRMADO! Estamos te esperando.`,
-    'cancelado': `Olá ${name}, infelizmente precisamos CANCELAR seu agendamento para ${service} no dia ${formattedDate} às ${time}. Por favor, entre em contato para reagendar.`
+    'cancelado': `Olá ${name}, infelizmente precisamos CANCELAR seu agendamento para ${service} no dia ${formattedDate} às ${time}. Por favor, entre em contato para reagendar.`,
+    'realizado': `Olá ${name}, seu agendamento para ${service} no dia ${formattedDate} às ${time} foi REALIZADO! Obrigado pela preferência!`
   }[status];
   const message = encodeURIComponent(statusMessage);
   return `https://wa.me/${phone}?text=${message}`;
