@@ -150,8 +150,24 @@
       border-color: rgba(212, 175, 55, 0.4);
     }
     .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       background: rgba(26, 26, 26, 0.9);
       backdrop-filter: blur(5px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      padding: 1rem;
+    }
+    .modal-content {
+      max-width: 100%;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
     }
   </style>
 </head>
@@ -162,18 +178,16 @@
       <h1 class="text-4xl font-extrabold heading-font text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600">Barber Shop</h1>
       <p class="text-warm-gray mt-2 font-medium">Agende seu horário ou gerencie a agenda.</p>
     </div>
-    
     <!-- Modal de Notificação -->
-    <div id="modal" class="fixed inset-0 modal-backdrop hidden flex items-center justify-center p-4 z-50">
-      <div class="dark-card rounded-2xl p-8 shadow-3xl max-w-sm w-full text-center animate-fade-in">
+    <div id="modal" class="modal-backdrop hidden">
+      <div class="dark-card rounded-2xl p-8 shadow-3xl max-w-sm w-full text-center animate-fade-in modal-content">
         <p id="modal-message" class="text-cream text-lg font-medium mb-5"></p>
         <button id="close-modal-btn" class="btn-primary py-3 px-8 rounded-full transition duration-300 transform hover:scale-105 font-bold">Fechar</button>
       </div>
     </div>
-    
     <!-- Modal para Adicionar Agendamento do Barbeiro -->
-    <div id="barber-add-modal" class="fixed inset-0 modal-backdrop hidden flex items-center justify-center p-4 z-50">
-      <div class="dark-card rounded-2xl p-8 shadow-3xl max-w-lg w-full animate-fade-in">
+    <div id="barber-add-modal" class="modal-backdrop hidden">
+      <div class="dark-card rounded-2xl p-8 shadow-3xl max-w-lg w-full animate-fade-in modal-content">
         <div class="flex justify-between items-center mb-5">
           <h3 class="text-2xl font-bold heading-font text-cream">Adicionar Novo Agendamento</h3>
           <button id="close-add-modal-btn" class="text-warm-gray hover:text-cream text-3xl font-light transition duration-300">&times;</button>
@@ -194,11 +208,33 @@
         </form>
       </div>
     </div>
-    
+    <!-- Modal para Gerenciar Horários -->
+    <div id="manage-slots-modal" class="modal-backdrop hidden">
+      <div class="dark-card rounded-2xl p-8 shadow-3xl max-w-lg w-full animate-fade-in modal-content">
+        <div class="flex justify-between items-center mb-5">
+          <h3 class="text-2xl font-bold heading-font text-cream">Gerenciar Horários</h3>
+          <button id="close-manage-slots-btn" class="text-warm-gray hover:text-cream text-3xl font-light transition duration-300">&times;</button>
+        </div>
+        <div class="mt-4">
+          <h4 class="text-lg font-semibold text-warm-gray mb-2">Bloquear/Desbloquear Horário</h4>
+          <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+            <input type="date" id="block-date" class="w-full sm:w-1/2 p-3 input-dark rounded-xl">
+            <input type="time" id="block-time" class="w-full sm:w-1/2 p-3 input-dark rounded-xl">
+          </div>
+          <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mt-4">
+            <button id="block-btn" class="w-full sm:w-1/2 bg-red-600 text-cream font-bold py-3 rounded-xl hover:bg-red-700 transition duration-300 transform hover:scale-105 shadow-md">
+              <i class="fas fa-lock mr-2"></i> Bloquear
+            </button>
+            <button id="unblock-btn" class="w-full sm:w-1/2 bg-amber-500 text-gray-900 font-bold py-3 rounded-xl hover:bg-amber-600 transition duration-300 transform hover:scale-105 shadow-md">
+              <i class="fas fa-unlock-alt mr-2"></i> Desbloquear
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- View do Cliente -->
     <div id="client-view">
       <h2 class="text-2xl font-bold heading-font text-cream mb-6 text-center">Agendar um Horário</h2>
-      
       <!-- Formulário de Agendamento em Etapas -->
       <div id="appointment-stepper" class="space-y-4">
         <!-- Etapa 1: Dados do Cliente -->
@@ -218,7 +254,6 @@
             </button>
           </div>
         </div>
-        
         <!-- Etapa 2: Seleção do Serviço -->
         <div id="step-2" class="step hidden animate-fade-in">
           <h3 class="text-xl font-bold heading-font text-cream mb-4">2. Selecione o Serviço</h3>
@@ -232,7 +267,6 @@
             <i class="fas fa-arrow-left mr-2"></i> Voltar
           </button>
         </div>
-        
         <!-- Etapa 3: Seleção de Data e Hora -->
         <div id="step-3" class="step hidden animate-fade-in">
           <h3 class="text-xl font-bold heading-font text-cream mb-4">3. Escolha a Data e Hora</h3>
@@ -254,9 +288,7 @@
           </button>
         </div>
       </div>
-      
       <hr class="my-8 border-yellow-600 border-opacity-30">
-      
       <div class="text-center">
         <h3 class="text-xl font-bold heading-font text-cream mb-4">Seus Agendamentos</h3>
         <div id="client-appointments-list" class="space-y-4">
@@ -264,7 +296,6 @@
         </div>
       </div>
     </div>
-    
     <!-- View do Barbeiro -->
     <div id="barber-view" class="hidden">
       <h2 class="text-3xl font-extrabold heading-font text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600 mb-6 text-center">Painel do Barbeiro</h2>
@@ -279,28 +310,15 @@
           <button id="open-add-modal-btn" class="w-full btn-primary font-bold py-3 rounded-xl transition duration-300 transform hover:scale-105 mb-4 shadow-lg">
             <i class="fas fa-plus mr-2"></i> Adicionar Agendamento
           </button>
-          <div class="mt-8 pt-4 border-t border-yellow-600 border-opacity-30">
-            <h4 class="text-lg font-semibold text-warm-gray mb-2">Bloquear/Desbloquear Horário</h4>
-            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
-              <input type="date" id="block-date" class="w-full sm:w-1/2 p-3 input-dark rounded-xl">
-              <input type="time" id="block-time" class="w-full sm:w-1/2 p-3 input-dark rounded-xl">
-            </div>
-            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mt-4">
-              <button id="block-btn" class="w-full sm:w-1/2 bg-red-600 text-cream font-bold py-3 rounded-xl hover:bg-red-700 transition duration-300 transform hover:scale-105 shadow-md">
-                <i class="fas fa-lock mr-2"></i> Bloquear
-              </button>
-              <button id="unblock-btn" class="w-full sm:w-1/2 bg-amber-500 text-gray-900 font-bold py-3 rounded-xl hover:bg-amber-600 transition duration-300 transform hover:scale-105 shadow-md">
-                <i class="fas fa-unlock-alt mr-2"></i> Desbloquear
-              </button>
-            </div>
-          </div>
+          <button id="open-manage-slots-btn" class="w-full btn-secondary font-bold py-3 rounded-xl transition duration-300 transform hover:scale-105 shadow-lg">
+            <i class="fas fa-calendar-times mr-2"></i> Gerenciar Horários
+          </button>
         </div>
         <div id="barber-appointments-list" class="space-y-4">
           <!-- Agendamentos do Firebase serão injetados aqui -->
         </div>
       </div>
     </div>
-    
     <!-- Painel de Análise -->
     <div id="analytics-view" class="hidden">
       <h2 class="text-3xl font-extrabold heading-font text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600 mb-6 text-center">Painel de Análise</h2>
@@ -338,7 +356,6 @@
             </div>
           </div>
         </div>
-        
         <!-- Cards de Métricas Principais -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <!-- Total de Agendamentos -->
@@ -353,7 +370,6 @@
               </div>
             </div>
           </div>
-          
           <!-- Agendamentos Confirmados -->
           <div class="glass-card p-6 rounded-2xl shadow-lg hover:shadow-xl transition duration-300">
             <div class="flex items-center justify-between">
@@ -366,7 +382,6 @@
               </div>
             </div>
           </div>
-          
           <!-- Agendamentos Pendentes -->
           <div class="glass-card p-6 rounded-2xl shadow-lg hover:shadow-xl transition duration-300">
             <div class="flex items-center justify-between">
@@ -379,7 +394,6 @@
               </div>
             </div>
           </div>
-          
           <!-- Agendamentos Cancelados -->
           <div class="glass-card p-6 rounded-2xl shadow-lg hover:shadow-xl transition duration-300">
             <div class="flex items-center justify-between">
@@ -393,7 +407,6 @@
             </div>
           </div>
         </div>
-        
         <!-- Cards de Faturamento -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Faturamento Realizado -->
@@ -412,7 +425,6 @@
               </div>
             </div>
           </div>
-          
           <!-- Faturamento Estimado -->
           <div class="dark-card p-6 rounded-2xl shadow-md">
             <h3 class="text-xl font-bold heading-font text-cream mb-4 flex items-center">
@@ -433,13 +445,11 @@
       </div>
     </div>
   </div>
-
   <!-- Firebase SDKs -->
   <script type="module">
     // Importações do Firebase
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
     // Configuração Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyCgx6yZxS8w54CMTcX_dql7NNDJq5uhEn0",
@@ -449,11 +459,9 @@
       messagingSenderId: "612905646934",
       appId: "1:612905646934:web:d4715b8eb14bc7d821f4f7"
     };
-
     // Inicializar Firebase
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-
     // Constantes
     const BARBER_PASSWORD = 'senha123';
     const ANALYTICS_PASSWORD = 'analytics123';
@@ -468,7 +476,6 @@
       "Cabelo e Barba": 70.00,
       "Pigmentação": 60.00
     };
-
     // Variáveis globais
     let appointmentData = {
       name: '',
@@ -486,20 +493,17 @@
       endDate: null,
       period: 'all'
     };
-
     // Funções Utilitárias
     function showModal(message) {
       const modal = document.getElementById('modal');
       document.getElementById('modal-message').textContent = message;
       modal.classList.remove('hidden');
     }
-
     function formatDate(dateString) {
       if (!dateString) return '';
       const [year, month, day] = dateString.split('-');
       return `${day}/${month}/${year}`;
     }
-
     function getNextSevenDays() {
       const dates = [];
       for (let i = 0; i < 7; i++) {
@@ -516,7 +520,6 @@
       }
       return dates;
     }
-
     // Navegação entre Views
     function checkURLView() {
       const urlParams = new URLSearchParams(window.location.search);
@@ -524,12 +527,10 @@
       const clientView = document.getElementById('client-view');
       const barberView = document.getElementById('barber-view');
       const analyticsView = document.getElementById('analytics-view');
-      
       // Esconder todas as views
       clientView.classList.add('hidden');
       barberView.classList.add('hidden');
       analyticsView.classList.add('hidden');
-      
       if (view === 'barber') {
         barberView.classList.remove('hidden');
       } else if (view === 'analytics') {
@@ -538,7 +539,6 @@
         clientView.classList.remove('hidden');
       }
     }
-
     // Renderização de Componentes
     function renderDateButtons() {
       const container = document.getElementById('date-picker-container');
@@ -559,12 +559,10 @@
         container.appendChild(button);
       });
     }
-
     function renderTimeButtons() {
       const container = document.getElementById('time-picker-container');
       container.innerHTML = '';
       if (!appointmentData.date) return;
-      
       const bookedTimes = allAppointments
         .filter(app => app.date === appointmentData.date && (app.status === 'pendente' || app.status === 'confirmado'))
         .map(app => app.time);
@@ -573,7 +571,6 @@
         .map(slot => slot.time);
       const allUnavailable = new Set([...bookedTimes, ...unavailableTimes]);
       const availableTimesForDate = availableTimes.filter(time => !allUnavailable.has(time));
-      
       if (availableTimesForDate.length === 0) {
         container.innerHTML = '<p class="text-center text-warm-gray col-span-full">Nenhum horário disponível.</p>';
       } else {
@@ -592,7 +589,6 @@
         });
       }
     }
-
     function updateStep3ButtonState() {
       const button = document.getElementById('next-step-3-btn');
       if (appointmentData.date && appointmentData.time) {
@@ -603,7 +599,6 @@
         button.className = 'w-full btn-disabled font-bold py-3 rounded-xl mt-6 shadow-lg';
       }
     }
-
     function renderServiceCards() {
       const container = document.getElementById('service-options');
       container.innerHTML = '';
@@ -614,7 +609,6 @@
         "Cabelo e Barba": "fas fa-hair-alt",
         "Pigmentação": "fas fa-palette"
       };
-      
       services.forEach(service => {
         const card = document.createElement('div');
         card.className = `service-card p-6 rounded-xl shadow-sm transition duration-200 cursor-pointer`;
@@ -637,7 +631,6 @@
         container.appendChild(card);
       });
     }
-
     // Navegação entre Etapas
     function showStep(step) {
       document.querySelectorAll('.step').forEach(el => el.classList.add('hidden'));
@@ -649,7 +642,6 @@
         renderTimeButtons();
       }
     }
-
     function resetClientUI() {
       appointmentData = { name: '', phone: '', service: null, date: null, time: null };
       document.getElementById('client-name').value = '';
@@ -657,24 +649,20 @@
       renderClientAppointments();
       showStep(1);
     }
-
     // Agendamentos do Cliente
     function renderClientAppointments() {
       const list = document.getElementById('client-appointments-list');
       list.innerHTML = '';
-      
       const clientPhone = document.getElementById('client-phone').value;
       if (!clientPhone) {
         list.innerHTML = '<p class="text-center text-warm-gray">Digite seu telefone para ver seus agendamentos.</p>';
         return;
       }
-      
       const clientAppointments = allAppointments.filter(app => app.phone === clientPhone);
       if (clientAppointments.length === 0) {
         list.innerHTML = '<p class="text-center text-warm-gray">Nenhum agendamento encontrado.</p>';
         return;
       }
-      
       clientAppointments.forEach(app => {
         const statusClass = {
           'pendente': 'status-pendente',
@@ -682,7 +670,6 @@
           'cancelado': 'status-cancelado',
           'realizado': 'status-realizado'
         }[app.status] || 'bg-gray-100 text-gray-800';
-        
         const formattedDate = formatDate(app.date);
         list.innerHTML += `
           <div class="dark-card p-5 rounded-xl shadow-sm hover:shadow-md transition duration-200">
@@ -698,7 +685,6 @@
         `;
       });
     }
-
     // Funções Firebase
     async function submitAppointment() {
       const newAppointment = {
@@ -710,7 +696,6 @@
         status: 'pendente',
         createdAt: new Date().toISOString()
       };
-      
       try {
         await addDoc(collection(db, 'appointments'), newAppointment);
         showModal('Agendamento realizado com sucesso! Aguarde a confirmação do barbeiro.');
@@ -720,7 +705,6 @@
         showModal('Ocorreu um erro ao agendar. Verifique sua conexão e tente novamente.');
       }
     }
-
     function setupFirebaseListeners() {
       // Listener para agendamentos
       const appointmentsColRef = collection(db, 'appointments');
@@ -735,7 +719,6 @@
         console.error("Erro ao buscar agendamentos:", error);
         showModal('Erro ao carregar agendamentos. Verifique sua conexão.');
       });
-      
       // Listener para slots bloqueados
       const blockedSlotsColRef = collection(db, 'blocked-slots');
       onSnapshot(blockedSlotsColRef, (querySnapshot) => {
@@ -748,22 +731,18 @@
         console.error("Erro ao buscar horários bloqueados:", error);
       });
     }
-
     function renderBarberAppointments(appointments) {
       const list = document.getElementById('barber-appointments-list');
       list.innerHTML = '';
-      
       if (appointments.length === 0) {
         list.innerHTML = '<p class="text-center text-warm-gray">Nenhum agendamento encontrado.</p>';
         return;
       }
-      
       appointments.sort((a, b) => {
         const dateA = new Date(`${a.date}T${a.time}`);
         const dateB = new Date(`${b.date}T${b.time}`);
         return dateA - dateB;
       });
-      
       appointments.forEach(app => {
         const statusClass = {
           'pendente': 'status-pendente',
@@ -771,9 +750,7 @@
           'cancelado': 'status-cancelado',
           'realizado': 'status-realizado'
         }[app.status] || 'bg-gray-100 text-gray-800';
-        
         const formattedDate = formatDate(app.date);
-        
         // Botões de ação baseados no status
         let actionButtons = '';
         if (app.status === 'pendente') {
@@ -803,7 +780,6 @@
             </div>
           `;
         }
-        
         const actionLinks = `
           <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mt-4">
             <a href="${createWhatsAppLink(app.phone, app.name, app.date, app.time, app.service, app.status)}" target="_blank"
@@ -816,7 +792,6 @@
             </button>
           </div>
         `;
-        
         list.innerHTML += `
           <div class="dark-card p-6 rounded-2xl shadow-md hover:shadow-xl transition duration-200">
             <div class="flex items-center justify-between mb-2">
@@ -835,12 +810,10 @@
         `;
       });
     }
-
     // Event Listeners
     document.getElementById('close-modal-btn').addEventListener('click', () => {
       document.getElementById('modal').classList.add('hidden');
     });
-
     // Navegação entre etapas do cliente
     document.getElementById('next-step-1-btn').addEventListener('click', () => {
       const nameInput = document.getElementById('client-name');
@@ -854,15 +827,12 @@
         showModal('Por favor, preencha todos os campos corretamente.');
       }
     });
-
     document.getElementById('back-step-2-btn').addEventListener('click', () => showStep(1));
     document.getElementById('next-step-2-btn').addEventListener('click', () => showStep(3));
     document.getElementById('back-step-3-btn').addEventListener('click', () => showStep(2));
     document.getElementById('next-step-3-btn').addEventListener('click', submitAppointment);
-
     // Input do telefone - atualizar lista quando mudado
     document.getElementById('client-phone').addEventListener('blur', renderClientAppointments);
-
     // Login do barbeiro
     document.getElementById('login-barber-btn').addEventListener('click', () => {
       const password = document.getElementById('barber-password').value;
@@ -873,17 +843,14 @@
         showModal('Senha incorreta!');
       }
     });
-
     // Modal para adicionar agendamento
     document.getElementById('open-add-modal-btn').addEventListener('click', () => {
       document.getElementById('barber-add-modal').classList.remove('hidden');
     });
-
     document.getElementById('close-add-modal-btn').addEventListener('click', () => {
       document.getElementById('barber-add-modal').classList.add('hidden');
       document.getElementById('barber-add-form').reset();
     });
-
     document.getElementById('barber-add-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const name = document.getElementById('barber-client-name').value;
@@ -891,7 +858,6 @@
       const service = document.getElementById('barber-service-select').value;
       const date = document.getElementById('barber-appointment-date').value;
       const time = document.getElementById('barber-appointment-time').value;
-      
       const newAppointment = {
         name,
         phone,
@@ -901,7 +867,6 @@
         status: 'confirmado',
         createdAt: new Date().toISOString()
       };
-      
       try {
         await addDoc(collection(db, 'appointments'), newAppointment);
         showModal('Agendamento adicionado com sucesso!');
@@ -912,7 +877,15 @@
         showModal('Ocorreu um erro ao adicionar o agendamento. Verifique sua conexão.');
       }
     });
-
+    // Modal para gerenciar horários
+    document.getElementById('open-manage-slots-btn').addEventListener('click', () => {
+      document.getElementById('manage-slots-modal').classList.remove('hidden');
+    });
+    document.getElementById('close-manage-slots-btn').addEventListener('click', () => {
+      document.getElementById('manage-slots-modal').classList.add('hidden');
+      document.getElementById('block-date').value = '';
+      document.getElementById('block-time').value = '';
+    });
     // Bloquear/Desbloquear horários
     document.getElementById('block-btn').addEventListener('click', async () => {
       const date = document.getElementById('block-date').value;
@@ -921,7 +894,6 @@
         showModal('Selecione uma data e um horário para bloquear.');
         return;
       }
-      
       try {
         await addDoc(collection(db, 'blocked-slots'), { date, time });
         showModal(`Horário ${time} na data ${formatDate(date)} foi bloqueado com sucesso!`);
@@ -932,7 +904,6 @@
         showModal('Ocorreu um erro ao bloquear o horário. Verifique sua conexão.');
       }
     });
-
     document.getElementById('unblock-btn').addEventListener('click', async () => {
       const date = document.getElementById('block-date').value;
       const time = document.getElementById('block-time').value;
@@ -940,17 +911,14 @@
         showModal('Selecione uma data e um horário para desbloquear.');
         return;
       }
-      
       try {
         const q = query(collection(db, 'blocked-slots'), where("date", "==", date), where("time", "==", time));
         const querySnapshot = await getDocs(q);
-        
         if (!querySnapshot.empty) {
           const deletePromises = [];
           querySnapshot.forEach((docRef) => {
             deletePromises.push(deleteDoc(docRef.ref));
           });
-          
           await Promise.all(deletePromises);
           showModal(`Horário ${time} na data ${formatDate(date)} foi desbloqueado com sucesso!`);
           document.getElementById('block-date').value = '';
@@ -963,7 +931,6 @@
         showModal('Ocorreu um erro ao desbloquear o horário. Verifique sua conexão.');
       }
     });
-
     // Login Analytics
     document.getElementById('login-analytics-btn').addEventListener('click', () => {
       const password = document.getElementById('analytics-password').value;
@@ -975,14 +942,12 @@
         showModal('Senha incorreta!');
       }
     });
-
     // Funções Analytics
     function initializeAnalytics() {
       setupAnalyticsListener();
       setDefaultDateRange();
       setupFilterEvents();
     }
-
     function setupAnalyticsListener() {
       const appointmentsColRef = collection(db, 'appointments');
       onSnapshot(appointmentsColRef, (querySnapshot) => {
@@ -995,21 +960,18 @@
         console.error("Erro ao buscar agendamentos para análise:", error);
       });
     }
-
     function setDefaultDateRange() {
       const today = new Date();
       const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
       document.getElementById('end-date').value = today.toISOString().split('T')[0];
       document.getElementById('start-date').value = lastMonth.toISOString().split('T')[0];
     }
-
     function setupFilterEvents() {
       document.getElementById('period-filter').addEventListener('change', (e) => {
         const period = e.target.value;
         currentFilters.period = period;
         const today = new Date();
         let startDate, endDate;
-        
         switch(period) {
           case 'today':
             startDate = endDate = today.toISOString().split('T')[0];
@@ -1029,7 +991,6 @@
             startDate = endDate = null;
             break;
         }
-        
         if (startDate && endDate) {
           document.getElementById('start-date').value = startDate;
           document.getElementById('end-date').value = endDate;
@@ -1039,21 +1000,18 @@
         }
         updateAnalytics();
       });
-      
       document.getElementById('apply-filters-btn').addEventListener('click', () => {
         currentFilters.startDate = document.getElementById('start-date').value;
         currentFilters.endDate = document.getElementById('end-date').value;
         updateAnalytics();
       });
     }
-
     function filterAppointmentsByPeriod(appointments) {
       const startDate = document.getElementById('start-date').value;
       const endDate = document.getElementById('end-date').value;
       if (!startDate && !endDate) {
         return appointments;
       }
-      
       return appointments.filter(app => {
         const appDate = app.date;
         if (startDate && appDate < startDate) return false;
@@ -1061,41 +1019,34 @@
         return true;
       });
     }
-
     function updateAnalytics() {
       const filteredAppointments = filterAppointmentsByPeriod(analyticsAppointments);
       updateMainMetrics(filteredAppointments);
       updateRevenueMetrics(filteredAppointments);
     }
-
     function updateMainMetrics(appointments) {
       const total = appointments.length;
       const confirmed = appointments.filter(app => app.status === 'confirmado').length;
       const pending = appointments.filter(app => app.status === 'pendente').length;
       const canceled = appointments.filter(app => app.status === 'cancelado').length;
       const realized = appointments.filter(app => app.status === 'realizado').length;
-      
       document.getElementById('total-appointments').textContent = total;
       document.getElementById('confirmed-appointments').textContent = confirmed;
       document.getElementById('pending-appointments').textContent = pending;
       document.getElementById('canceled-appointments').textContent = canceled;
     }
-
     function updateRevenueMetrics(appointments) {
       const realizedRevenue = appointments
         .filter(app => app.status === 'realizado')
         .reduce((sum, app) => sum + (servicePrices[app.service] || 0), 0);
-      
       const estimatedRevenue = appointments
         .filter(app => app.status === 'confirmado' || app.status === 'pendente')
         .reduce((sum, app) => sum + (servicePrices[app.service] || 0), 0);
-      
       document.getElementById('realized-revenue').textContent = 
         'R$ ' + realizedRevenue.toFixed(2).replace('.', ',');
       document.getElementById('estimated-revenue').textContent = 
         'R$ ' + estimatedRevenue.toFixed(2).replace('.', ',');
     }
-
     // Funções Globais para uso em onclick
     window.updateAppointmentStatus = async (docId, newStatus) => {
       const appointmentRef = doc(db, 'appointments', docId);
@@ -1107,7 +1058,6 @@
         showModal("Erro ao atualizar o status do agendamento. Verifique sua conexão.");
       }
     };
-
     window.deleteAppointment = async (docId) => {
       if (!confirm('Tem certeza que deseja excluir este agendamento?')) {
         return;
@@ -1121,7 +1071,6 @@
         showModal("Erro ao excluir o agendamento. Verifique sua conexão.");
       }
     };
-
     window.createWhatsAppLink = (phone, name, date, time, service, status) => {
       const formattedDate = formatDate(date);
       const statusMessage = {
@@ -1130,11 +1079,9 @@
         'cancelado': `Olá ${name}, infelizmente precisamos CANCELAR seu agendamento para ${service} no dia ${formattedDate} às ${time}. Por favor, entre em contato para reagendar.`,
         'realizado': `Olá ${name}, seu agendamento para ${service} no dia ${formattedDate} às ${time} foi REALIZADO! Obrigado pela preferência!`
       }[status];
-      
       const message = encodeURIComponent(statusMessage);
       return `https://wa.me/${phone}?text=${message}`;
     };
-
     // Inicialização
     document.addEventListener('DOMContentLoaded', () => {
       console.log('DOM carregado, inicializando aplicação...');
