@@ -1,1094 +1,652 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Barber Shop Mobile</title>
-  <!-- Tailwind CSS CDN para um estilo moderno -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts - Poppins e Inter -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <!-- Font Awesome para ícones -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    :root {
-      --primary-dark: #1a1a1a;
-      --secondary-dark: #2a2a2a;
-      --accent-gold: #d4af37;
-      --light-gold: #f4e7c1;
-      --cream: #f5f1e8;
-      --warm-gray: #6b6b6b;
-      --light-gray: #e5e1d8;
-    }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
-      min-height: 100vh;
-      color: #f5f1e8;
-    }
-    .heading-font {
-      font-family: 'Poppins', sans-serif;
-    }
-    .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .status-badge {
-      display: inline-block;
-      padding: 0.25rem 0.75rem;
-      border-radius: 9999px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: capitalize;
-    }
-    .status-pendente {
-      background: linear-gradient(135deg, #fbbf24, #f59e0b);
-      color: #1a1a1a;
-    }
-    .status-confirmado {
-      background: linear-gradient(135deg, #10b981, #059669);
-      color: #1a1a1a;
-    }
-    .status-cancelado {
-      background: linear-gradient(135deg, #ef4444, #dc2626);
-      color: #f5f1e8;
-    }
-    .status-realizado {
-      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-      color: #f5f1e8;
-    }
-    .service-card-selected, .time-button-selected {
-      border-color: var(--accent-gold);
-      background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 0.05));
-      box-shadow: 0 0 0 2px var(--accent-gold), 0 8px 25px rgba(212, 175, 55, 0.3);
-    }
-    .glass-card {
-      background: rgba(42, 42, 42, 0.8);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(212, 175, 55, 0.2);
-    }
-    .gold-gradient {
-      background: linear-gradient(135deg, #d4af37, #f4e7c1);
-      color: #1a1a1a;
-    }
-    .gold-gradient:hover {
-      background: linear-gradient(135deg, #f4e7c1, #d4af37);
-    }
-    .dark-card {
-      background: rgba(26, 26, 26, 0.95);
-      border: 1px solid rgba(212, 175, 55, 0.3);
-    }
-    .input-dark {
-      background: rgba(42, 42, 42, 0.8);
-      border: 2px solid rgba(212, 175, 55, 0.3);
-      color: #f5f1e8;
-    }
-    .input-dark:focus {
-      border-color: var(--accent-gold);
-      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
-    }
-    .input-dark::placeholder {
-      color: #6b6b6b;
-    }
-    .btn-primary {
-      background: linear-gradient(135deg, #d4af37, #f4e7c1);
-      color: #1a1a1a;
-      font-weight: 700;
-      transition: all 0.3s ease;
-    }
-    .btn-primary:hover:not(:disabled) {
-      background: linear-gradient(135deg, #f4e7c1, #d4af37);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
-    }
-    .btn-secondary {
-      background: rgba(107, 107, 107, 0.8);
-      color: #f5f1e8;
-      border: 1px solid rgba(212, 175, 55, 0.3);
-    }
-    .btn-secondary:hover {
-      background: rgba(212, 175, 55, 0.2);
-      border-color: var(--accent-gold);
-    }
-    .btn-disabled {
-      background: rgba(107, 107, 107, 0.5);
-      color: rgba(245, 241, 232, 0.5);
-      cursor: not-allowed;
-    }
-    .service-card {
-      background: rgba(42, 42, 42, 0.6);
-      border: 2px solid rgba(212, 175, 55, 0.2);
-      transition: all 0.3s ease;
-    }
-    .service-card:hover {
-      background: rgba(42, 42, 42, 0.8);
-      border-color: rgba(212, 175, 55, 0.4);
-      transform: translateY(-3px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-    }
-    .time-button {
-      background: rgba(42, 42, 42, 0.6);
-      border: 2px solid rgba(212, 175, 55, 0.2);
-      color: #f5f1e8;
-      transition: all 0.3s ease;
-    }
-    .time-button:hover {
-      background: rgba(42, 42, 42, 0.8);
-      border-color: rgba(212, 175, 55, 0.4);
-    }
-    .date-button {
-      background: rgba(42, 42, 42, 0.6);
-      border: 2px solid rgba(212, 175, 55, 0.2);
-      color: #f5f1e8;
-      transition: all 0.3s ease;
-    }
-    .date-button:hover {
-      background: rgba(42, 42, 42, 0.8);
-      border-color: rgba(212, 175, 55, 0.4);
-    }
-    .modal-backdrop {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(26, 26, 26, 0.9);
-      backdrop-filter: blur(5px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 50;
-      padding: 1rem;
-    }
-    .modal-content {
-      max-width: 100%;
-      width: 100%;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-  </style>
-</head>
-<body class="flex items-center justify-center min-h-screen p-4">
-  <div class="max-w-2xl w-full glass-card rounded-2xl shadow-2xl p-6 sm:p-8 space-y-8">
-    <!-- Título principal -->
-    <div class="text-center">
-      <h1 class="text-4xl font-extrabold heading-font text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600">Barber Shop</h1>
-      <p class="text-warm-gray mt-2 font-medium">Agende seu horário ou gerencie a agenda.</p>
-    </div>
-    <!-- Modal de Notificação -->
-    <div id="modal" class="modal-backdrop hidden">
-      <div class="dark-card rounded-2xl p-8 shadow-3xl max-w-sm w-full text-center animate-fade-in modal-content">
-        <p id="modal-message" class="text-cream text-lg font-medium mb-5"></p>
-        <button id="close-modal-btn" class="btn-primary py-3 px-8 rounded-full transition duration-300 transform hover:scale-105 font-bold">Fechar</button>
-      </div>
-    </div>
-    <!-- Modal para Adicionar Agendamento do Barbeiro -->
-    <div id="barber-add-modal" class="modal-backdrop hidden">
-      <div class="dark-card rounded-2xl p-8 shadow-3xl max-w-lg w-full animate-fade-in modal-content">
-        <div class="flex justify-between items-center mb-5">
-          <h3 class="text-2xl font-bold heading-font text-cream">Adicionar Novo Agendamento</h3>
-          <button id="close-add-modal-btn" class="text-warm-gray hover:text-cream text-3xl font-light transition duration-300">&times;</button>
-        </div>
-        <form id="barber-add-form" class="space-y-4">
-          <input type="text" id="barber-client-name" placeholder="Nome do Cliente" required class="w-full p-3 input-dark rounded-xl focus:outline-none transition duration-200">
-          <input type="tel" id="barber-client-phone" placeholder="WhatsApp (ex: 5511999999999)" required class="w-full p-3 input-dark rounded-xl focus:outline-none transition duration-200">
-          <select id="barber-service-select" required class="w-full p-3 input-dark rounded-xl focus:outline-none transition duration-200">
-            <option value="" disabled selected>Selecione o Serviço</option>
-            <option value="Corte de Cabelo">Corte de Cabelo</option>
-            <option value="Barba">Barba</option>
-            <option value="Cabelo e Barba">Cabelo e Barba</option>
-            <option value="Pigmentação">Pigmentação</option>
-          </select>
-          <input type="date" id="barber-appointment-date" required class="w-full p-3 input-dark rounded-xl focus:outline-none transition duration-200">
-          <input type="time" id="barber-appointment-time" required class="w-full p-3 input-dark rounded-xl focus:outline-none transition duration-200">
-          <button type="submit" class="w-full btn-primary font-bold py-3 rounded-xl transition duration-300 transform hover:scale-105 shadow-lg">Adicionar Agendamento</button>
-        </form>
-      </div>
-    </div>
-    <!-- Modal para Gerenciar Horários -->
-    <div id="manage-slots-modal" class="modal-backdrop hidden">
-      <div class="dark-card rounded-2xl p-8 shadow-3xl max-w-lg w-full animate-fade-in modal-content">
-        <div class="flex justify-between items-center mb-5">
-          <h3 class="text-2xl font-bold heading-font text-cream">Gerenciar Horários</h3>
-          <button id="close-manage-slots-btn" class="text-warm-gray hover:text-cream text-3xl font-light transition duration-300">&times;</button>
-        </div>
-        <div class="mt-4">
-          <h4 class="text-lg font-semibold text-warm-gray mb-2">Bloquear/Desbloquear Horário</h4>
-          <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
-            <input type="date" id="block-date" class="w-full sm:w-1/2 p-3 input-dark rounded-xl">
-            <input type="time" id="block-time" class="w-full sm:w-1/2 p-3 input-dark rounded-xl">
-          </div>
-          <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mt-4">
-            <button id="block-btn" class="w-full sm:w-1/2 bg-red-600 text-cream font-bold py-3 rounded-xl hover:bg-red-700 transition duration-300 transform hover:scale-105 shadow-md">
-              <i class="fas fa-lock mr-2"></i> Bloquear
-            </button>
-            <button id="unblock-btn" class="w-full sm:w-1/2 bg-amber-500 text-gray-900 font-bold py-3 rounded-xl hover:bg-amber-600 transition duration-300 transform hover:scale-105 shadow-md">
-              <i class="fas fa-unlock-alt mr-2"></i> Desbloquear
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- View do Cliente -->
-    <div id="client-view">
-      <h2 class="text-2xl font-bold heading-font text-cream mb-6 text-center">Agendar um Horário</h2>
-      <!-- Formulário de Agendamento em Etapas -->
-      <div id="appointment-stepper" class="space-y-4">
-        <!-- Etapa 1: Dados do Cliente -->
-        <div id="step-1" class="step">
-          <h3 class="text-xl font-bold heading-font text-cream mb-4">1. Seus Dados</h3>
-          <div class="space-y-4">
-            <div class="relative">
-              <i class="fas fa-user absolute left-4 top-1/2 -translate-y-1/2 text-yellow-500"></i>
-              <input type="text" id="client-name" placeholder="Seu Nome" required class="w-full p-3 pl-12 input-dark rounded-xl focus:outline-none transition duration-200">
-            </div>
-            <div class="relative">
-              <i class="fab fa-whatsapp absolute left-4 top-1/2 -translate-y-1/2 text-green-400"></i>
-              <input type="tel" id="client-phone" placeholder="WhatsApp (ex: 5511999999999)" required class="w-full p-3 pl-12 input-dark rounded-xl focus:outline-none transition duration-200">
-            </div>
-            <button id="next-step-1-btn" class="w-full btn-primary font-bold py-3 rounded-xl transition duration-300 transform hover:scale-105 shadow-lg">
-              Próximo <i class="fas fa-arrow-right ml-2"></i>
-            </button>
-          </div>
-        </div>
-        <!-- Etapa 2: Seleção do Serviço -->
-        <div id="step-2" class="step hidden animate-fade-in">
-          <h3 class="text-xl font-bold heading-font text-cream mb-4">2. Selecione o Serviço</h3>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="service-options">
-            <!-- Cards de serviço serão injetados aqui -->
-          </div>
-          <button id="next-step-2-btn" disabled class="w-full btn-disabled font-bold py-3 rounded-xl mt-6 shadow-lg">
-            Próximo <i class="fas fa-arrow-right ml-2"></i>
-          </button>
-          <button id="back-step-2-btn" class="w-full btn-secondary font-bold py-3 rounded-xl mt-2 transition duration-300 transform hover:scale-105">
-            <i class="fas fa-arrow-left mr-2"></i> Voltar
-          </button>
-        </div>
-        <!-- Etapa 3: Seleção de Data e Hora -->
-        <div id="step-3" class="step hidden animate-fade-in">
-          <h3 class="text-xl font-bold heading-font text-cream mb-4">3. Escolha a Data e Hora</h3>
-          <div class="space-y-4">
-            <!-- Botões de data (próximos 7 dias) -->
-            <div id="date-picker-container" class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              <!-- Botões de data serão injetados aqui -->
-            </div>
-            <!-- Botões de horário -->
-            <div id="time-picker-container" class="grid grid-cols-3 sm:grid-cols-4 gap-2">
-              <!-- Botões de horário serão injetados aqui -->
-            </div>
-          </div>
-          <button id="next-step-3-btn" disabled class="w-full btn-disabled font-bold py-3 rounded-xl mt-6 shadow-lg">
-            Agendar <i class="fas fa-calendar-plus ml-2"></i>
-          </button>
-          <button id="back-step-3-btn" class="w-full btn-secondary font-bold py-3 rounded-xl mt-2 transition duration-300 transform hover:scale-105">
-            <i class="fas fa-arrow-left mr-2"></i> Voltar
-          </button>
-        </div>
-      </div>
-      <hr class="my-8 border-yellow-600 border-opacity-30">
-      <div class="text-center">
-        <h3 class="text-xl font-bold heading-font text-cream mb-4">Seus Agendamentos</h3>
-        <div id="client-appointments-list" class="space-y-4">
-          <!-- Agendamentos do cliente serão injetados aqui -->
-        </div>
-      </div>
-    </div>
-    <!-- View do Barbeiro -->
-    <div id="barber-view" class="hidden">
-      <h2 class="text-3xl font-extrabold heading-font text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600 mb-6 text-center">Painel do Barbeiro</h2>
-      <div id="barber-login" class="space-y-4">
-        <input type="password" id="barber-password" placeholder="Senha de Acesso" class="w-full p-3 input-dark rounded-xl focus:outline-none transition duration-200">
-        <button id="login-barber-btn" class="w-full bg-gray-800 text-cream font-bold py-3 rounded-xl hover:bg-gray-700 transition duration-300 transform hover:scale-105 shadow-lg border border-yellow-600 border-opacity-30">Entrar</button>
-      </div>
-      <div id="barber-appointments-panel" class="hidden">
-        <!-- Seção para gerenciar horários -->
-        <div class="dark-card p-6 rounded-2xl shadow-md mb-6">
-          <h3 class="text-xl font-bold heading-font text-cream mb-4">Gerenciar Agenda</h3>
-          <button id="open-add-modal-btn" class="w-full btn-primary font-bold py-3 rounded-xl transition duration-300 transform hover:scale-105 mb-4 shadow-lg">
-            <i class="fas fa-plus mr-2"></i> Adicionar Agendamento
-          </button>
-          <button id="open-manage-slots-btn" class="w-full btn-secondary font-bold py-3 rounded-xl transition duration-300 transform hover:scale-105 shadow-lg">
-            <i class="fas fa-calendar-times mr-2"></i> Gerenciar Horários
-          </button>
-        </div>
-        <div id="barber-appointments-list" class="space-y-4">
-          <!-- Agendamentos do Firebase serão injetados aqui -->
-        </div>
-      </div>
-    </div>
-    <!-- Painel de Análise -->
-    <div id="analytics-view" class="hidden">
-      <h2 class="text-3xl font-extrabold heading-font text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600 mb-6 text-center">Painel de Análise</h2>
-      <div id="analytics-login" class="space-y-4">
-        <input type="password" id="analytics-password" placeholder="Senha de Acesso" class="w-full p-3 input-dark rounded-xl focus:outline-none transition duration-200">
-        <button id="login-analytics-btn" class="w-full bg-gray-800 text-cream font-bold py-3 rounded-xl hover:bg-gray-700 transition duration-300 transform hover:scale-105 shadow-lg border border-yellow-600 border-opacity-30">Entrar</button>
-      </div>
-      <div id="analytics-dashboard" class="hidden space-y-6">
-        <!-- Filtros -->
-        <div class="dark-card p-6 rounded-2xl shadow-md">
-          <h3 class="text-xl font-bold heading-font text-cream mb-4">Filtros de Período</h3>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div>
-              <label class="block text-warm-gray text-sm mb-2">Data Inicial</label>
-              <input type="date" id="start-date" class="w-full p-3 input-dark rounded-xl">
-            </div>
-            <div>
-              <label class="block text-warm-gray text-sm mb-2">Data Final</label>
-              <input type="date" id="end-date" class="w-full p-3 input-dark rounded-xl">
-            </div>
-            <div>
-              <label class="block text-warm-gray text-sm mb-2">Período</label>
-              <select id="period-filter" class="w-full p-3 input-dark rounded-xl">
-                <option value="all">Todo o período</option>
-                <option value="today">Hoje</option>
-                <option value="week">Esta semana</option>
-                <option value="month">Este mês</option>
-                <option value="custom">Personalizado</option>
-              </select>
-            </div>
-            <div class="flex items-end">
-              <button id="apply-filters-btn" class="w-full btn-primary font-bold py-3 rounded-xl transition duration-300 transform hover:scale-105 shadow-lg">
-                <i class="fas fa-filter mr-2"></i> Aplicar
-              </button>
-            </div>
-          </div>
-        </div>
-        <!-- Cards de Métricas Principais -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <!-- Total de Agendamentos -->
-          <div class="glass-card p-6 rounded-2xl shadow-lg hover:shadow-xl transition duration-300">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-warm-gray text-sm font-medium">Total de Agendamentos</p>
-                <p id="total-appointments" class="text-3xl font-bold text-cream">0</p>
-              </div>
-              <div class="bg-blue-500 bg-opacity-20 p-3 rounded-full">
-                <i class="fas fa-calendar-alt text-2xl text-blue-400"></i>
-              </div>
-            </div>
-          </div>
-          <!-- Agendamentos Confirmados -->
-          <div class="glass-card p-6 rounded-2xl shadow-lg hover:shadow-xl transition duration-300">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-warm-gray text-sm font-medium">Confirmados</p>
-                <p id="confirmed-appointments" class="text-3xl font-bold text-green-400">0</p>
-              </div>
-              <div class="bg-green-500 bg-opacity-20 p-3 rounded-full">
-                <i class="fas fa-check-circle text-2xl text-green-400"></i>
-              </div>
-            </div>
-          </div>
-          <!-- Agendamentos Pendentes -->
-          <div class="glass-card p-6 rounded-2xl shadow-lg hover:shadow-xl transition duration-300">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-warm-gray text-sm font-medium">Pendentes</p>
-                <p id="pending-appointments" class="text-3xl font-bold text-yellow-400">0</p>
-              </div>
-              <div class="bg-yellow-500 bg-opacity-20 p-3 rounded-full">
-                <i class="fas fa-clock text-2xl text-yellow-400"></i>
-              </div>
-            </div>
-          </div>
-          <!-- Agendamentos Cancelados -->
-          <div class="glass-card p-6 rounded-2xl shadow-lg hover:shadow-xl transition duration-300">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-warm-gray text-sm font-medium">Cancelados</p>
-                <p id="canceled-appointments" class="text-3xl font-bold text-red-400">0</p>
-              </div>
-              <div class="bg-red-500 bg-opacity-20 p-3 rounded-full">
-                <i class="fas fa-times-circle text-2xl text-red-400"></i>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Cards de Faturamento -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Faturamento Realizado -->
-          <div class="dark-card p-6 rounded-2xl shadow-md">
-            <h3 class="text-xl font-bold heading-font text-cream mb-4 flex items-center">
-              <i class="fas fa-money-bill-wave text-green-400 mr-3"></i>
-              Faturamento Realizado
-            </h3>
-            <div class="space-y-3">
-              <div class="flex justify-between items-center">
-                <span class="text-warm-gray">Serviços Realizados:</span>
-                <span id="realized-revenue" class="text-2xl font-bold text-green-400">R$ 0,00</span>
-              </div>
-              <div class="text-sm text-warm-gray">
-                <p>Baseado em agendamentos marcados como realizados</p>
-              </div>
-            </div>
-          </div>
-          <!-- Faturamento Estimado -->
-          <div class="dark-card p-6 rounded-2xl shadow-md">
-            <h3 class="text-xl font-bold heading-font text-cream mb-4 flex items-center">
-              <i class="fas fa-chart-line text-yellow-400 mr-3"></i>
-              Faturamento Estimado
-            </h3>
-            <div class="space-y-3">
-              <div class="flex justify-between items-center">
-                <span class="text-warm-gray">Potencial Total:</span>
-                <span id="estimated-revenue" class="text-2xl font-bold text-yellow-400">R$ 0,00</span>
-              </div>
-              <div class="text-sm text-warm-gray">
-                <p>Incluindo pendentes e confirmados</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- Firebase SDKs -->
-  <script type="module">
-    // Importações do Firebase
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-    // Configuração Firebase
-    const firebaseConfig = {
-      
-    };
-    // Inicializar Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    // Constantes
-    const BARBER_PASSWORD = 'senha123';
-    const ANALYTICS_PASSWORD = 'analytics123';
-    const availableTimes = [
-      '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
-      '13:00', '13:30', '14:00', '14:30', '15:00', '15:30',
-      '16:00', '16:30', '17:00', '17:30', '18:00', '18:30'
-    ];
-    const servicePrices = {
-      "Corte de Cabelo": 45.00,
-      "Barba": 30.00,
-      "Cabelo e Barba": 70.00,
-      "Pigmentação": 60.00
-    };
-    // Variáveis globais
-    let appointmentData = {
-      name: '',
-      phone: '',
-      service: null,
-      date: null,
-      time: null
-    };
-    let currentStep = 1;
-    let allAppointments = [];
-    let blockedSlots = [];
-    let analyticsAppointments = [];
-    let currentFilters = {
-      startDate: null,
-      endDate: null,
-      period: 'all'
-    };
-    // Funções Utilitárias
-    function showModal(message) {
-      const modal = document.getElementById('modal');
-      document.getElementById('modal-message').textContent = message;
-      modal.classList.remove('hidden');
-    }
-    function formatDate(dateString) {
-      if (!dateString) return '';
-      const [year, month, day] = dateString.split('-');
-      return `${day}/${month}/${year}`;
-    }
-    function getNextSevenDays() {
-      const dates = [];
-      for (let i = 0; i < 7; i++) {
-        const date = new Date();
-        date.setDate(date.getDate() + i);
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
-        dates.push({
-          full: `${year}-${month}-${day}`,
-          day: day,
-          weekday: date.toLocaleDateString('pt-BR', { weekday: 'short' }).split('.')[0]
-        });
-      }
-      return dates;
-    }
-    // Navegação entre Views
-    function checkURLView() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const view = urlParams.get('view');
-      const clientView = document.getElementById('client-view');
-      const barberView = document.getElementById('barber-view');
-      const analyticsView = document.getElementById('analytics-view');
-      // Esconder todas as views
-      clientView.classList.add('hidden');
-      barberView.classList.add('hidden');
-      analyticsView.classList.add('hidden');
-      if (view === 'barber') {
-        barberView.classList.remove('hidden');
-      } else if (view === 'analytics') {
-        analyticsView.classList.remove('hidden');
-      } else {
-        clientView.classList.remove('hidden');
-      }
-    }
-    // Renderização de Componentes
-    function renderDateButtons() {
-      const container = document.getElementById('date-picker-container');
-      container.innerHTML = '';
-      const dates = getNextSevenDays();
-      dates.forEach(d => {
-        const button = document.createElement('button');
-        button.className = `p-4 flex flex-col items-center justify-center date-button rounded-xl transition-colors`;
-        button.innerHTML = `<span class="text-xs font-semibold uppercase text-warm-gray">${d.weekday}</span><span class="text-2xl font-bold text-cream">${d.day}</span>`;
-        button.dataset.date = d.full;
-        button.addEventListener('click', () => {
-          document.querySelectorAll('#date-picker-container button').forEach(btn => btn.classList.remove('service-card-selected'));
-          button.classList.add('service-card-selected');
-          appointmentData.date = d.full;
-          renderTimeButtons();
-          updateStep3ButtonState();
-        });
-        container.appendChild(button);
-      });
-    }
-    function renderTimeButtons() {
-      const container = document.getElementById('time-picker-container');
-      container.innerHTML = '';
-      if (!appointmentData.date) return;
-      const bookedTimes = allAppointments
-        .filter(app => app.date === appointmentData.date && (app.status === 'pendente' || app.status === 'confirmado'))
-        .map(app => app.time);
-      const unavailableTimes = blockedSlots
-        .filter(slot => slot.date === appointmentData.date)
-        .map(slot => slot.time);
-      const allUnavailable = new Set([...bookedTimes, ...unavailableTimes]);
-      const availableTimesForDate = availableTimes.filter(time => !allUnavailable.has(time));
-      if (availableTimesForDate.length === 0) {
-        container.innerHTML = '<p class="text-center text-warm-gray col-span-full">Nenhum horário disponível.</p>';
-      } else {
-        availableTimesForDate.forEach(time => {
-          const button = document.createElement('button');
-          button.className = `py-3 px-2 time-button rounded-xl font-semibold transition-colors`;
-          button.textContent = time;
-          button.dataset.time = time;
-          button.addEventListener('click', () => {
-            document.querySelectorAll('#time-picker-container button').forEach(btn => btn.classList.remove('time-button-selected'));
-            button.classList.add('time-button-selected');
-            appointmentData.time = time;
-            updateStep3ButtonState();
-          });
-          container.appendChild(button);
-        });
-      }
-    }
-    function updateStep3ButtonState() {
-      const button = document.getElementById('next-step-3-btn');
-      if (appointmentData.date && appointmentData.time) {
-        button.disabled = false;
-        button.className = 'w-full btn-primary font-bold py-3 rounded-xl mt-6 shadow-lg';
-      } else {
-        button.disabled = true;
-        button.className = 'w-full btn-disabled font-bold py-3 rounded-xl mt-6 shadow-lg';
-      }
-    }
-    function renderServiceCards() {
-      const container = document.getElementById('service-options');
-      container.innerHTML = '';
-      const services = Object.keys(servicePrices);
-      const serviceIcons = {
-        "Corte de Cabelo": "fas fa-cut",
-        "Barba": "fas fa-beard",
-        "Cabelo e Barba": "fas fa-hair-alt",
-        "Pigmentação": "fas fa-palette"
-      };
-      services.forEach(service => {
-        const card = document.createElement('div');
-        card.className = `service-card p-6 rounded-xl shadow-sm transition duration-200 cursor-pointer`;
-        card.innerHTML = `
-          <div class="text-center">
-            <i class="${serviceIcons[service]} text-4xl text-yellow-400 mb-2"></i>
-            <h4 class="text-lg font-bold text-cream">${service}</h4>
-            <p class="text-sm text-warm-gray mt-1">R$ ${servicePrices[service].toFixed(2).replace('.', ',')}</p>
-          </div>
-        `;
-        card.dataset.service = service;
-        card.addEventListener('click', () => {
-          document.querySelectorAll('.service-card').forEach(c => c.classList.remove('service-card-selected'));
-          card.classList.add('service-card-selected');
-          appointmentData.service = service;
-          const nextBtn = document.getElementById('next-step-2-btn');
-          nextBtn.disabled = false;
-          nextBtn.className = 'w-full btn-primary font-bold py-3 rounded-xl mt-6 shadow-lg';
-        });
-        container.appendChild(card);
-      });
-    }
-    // Navegação entre Etapas
-    function showStep(step) {
-      document.querySelectorAll('.step').forEach(el => el.classList.add('hidden'));
-      document.getElementById(`step-${step}`).classList.remove('hidden');
-      currentStep = step;
-      if (currentStep === 2) renderServiceCards();
-      if (currentStep === 3) {
-        renderDateButtons();
-        renderTimeButtons();
-      }
-    }
-    function resetClientUI() {
-      appointmentData = { name: '', phone: '', service: null, date: null, time: null };
-      document.getElementById('client-name').value = '';
-      document.getElementById('client-phone').value = '';
-      renderClientAppointments();
-      showStep(1);
-    }
-    // Agendamentos do Cliente
-    function renderClientAppointments() {
-      const list = document.getElementById('client-appointments-list');
-      list.innerHTML = '';
-      const clientPhone = document.getElementById('client-phone').value;
-      if (!clientPhone) {
-        list.innerHTML = '<p class="text-center text-warm-gray">Digite seu telefone para ver seus agendamentos.</p>';
-        return;
-      }
-      const clientAppointments = allAppointments.filter(app => app.phone === clientPhone);
-      if (clientAppointments.length === 0) {
-        list.innerHTML = '<p class="text-center text-warm-gray">Nenhum agendamento encontrado.</p>';
-        return;
-      }
-      clientAppointments.forEach(app => {
-        const statusClass = {
-          'pendente': 'status-pendente',
-          'confirmado': 'status-confirmado',
-          'cancelado': 'status-cancelado',
-          'realizado': 'status-realizado'
-        }[app.status] || 'bg-gray-100 text-gray-800';
-        const formattedDate = formatDate(app.date);
-        list.innerHTML += `
-          <div class="dark-card p-5 rounded-xl shadow-sm hover:shadow-md transition duration-200">
-            <div class="flex justify-between items-center mb-2">
-              <span class="text-lg font-bold text-cream">${app.service}</span>
-              <span class="status-badge ${statusClass}">${app.status}</span>
-            </div>
-            <div class="text-sm text-warm-gray space-y-1">
-              <p><i class="fas fa-calendar-alt w-5 text-yellow-400"></i> <span class="font-semibold">${formattedDate}</span> às <span class="font-semibold">${app.time}</span></p>
-              <p><i class="fas fa-dollar-sign w-5 text-yellow-400"></i> Preço: <span class="font-semibold">R$ ${servicePrices[app.service] ? servicePrices[app.service].toFixed(2).replace('.', ',') : 'N/A'}</span></p>
-            </div>
-          </div>
-        `;
-      });
-    }
-    // Funções Firebase
-    async function submitAppointment() {
-      const newAppointment = {
-        name: appointmentData.name,
-        phone: appointmentData.phone,
-        service: appointmentData.service,
-        date: appointmentData.date,
-        time: appointmentData.time,
-        status: 'pendente',
-        createdAt: new Date().toISOString()
-      };
-      try {
-        await addDoc(collection(db, 'appointments'), newAppointment);
-        showModal('Agendamento realizado com sucesso! Aguarde a confirmação do barbeiro.');
-        resetClientUI();
-      } catch (error) {
-        console.error("Erro ao agendar:", error);
-        showModal('Ocorreu um erro ao agendar. Verifique sua conexão e tente novamente.');
-      }
-    }
-    function setupFirebaseListeners() {
-      // Listener para agendamentos
-      const appointmentsColRef = collection(db, 'appointments');
-      onSnapshot(appointmentsColRef, (querySnapshot) => {
-        allAppointments = [];
-        querySnapshot.forEach((doc) => {
-          allAppointments.push({ docId: doc.id, ...doc.data() });
-        });
-        renderBarberAppointments(allAppointments);
-        if (currentStep === 3) renderTimeButtons();
-      }, (error) => {
-        console.error("Erro ao buscar agendamentos:", error);
-        showModal('Erro ao carregar agendamentos. Verifique sua conexão.');
-      });
-      // Listener para slots bloqueados
-      const blockedSlotsColRef = collection(db, 'blocked-slots');
-      onSnapshot(blockedSlotsColRef, (querySnapshot) => {
-        blockedSlots = [];
-        querySnapshot.forEach((doc) => {
-          blockedSlots.push({ docId: doc.id, ...doc.data() });
-        });
-        if (currentStep === 3) renderTimeButtons();
-      }, (error) => {
-        console.error("Erro ao buscar horários bloqueados:", error);
-      });
-    }
-    function renderBarberAppointments(appointments) {
-      const list = document.getElementById('barber-appointments-list');
-      list.innerHTML = '';
-      if (appointments.length === 0) {
-        list.innerHTML = '<p class="text-center text-warm-gray">Nenhum agendamento encontrado.</p>';
-        return;
-      }
-      appointments.sort((a, b) => {
-        const dateA = new Date(`${a.date}T${a.time}`);
-        const dateB = new Date(`${b.date}T${b.time}`);
-        return dateA - dateB;
-      });
-      appointments.forEach(app => {
-        const statusClass = {
-          'pendente': 'status-pendente',
-          'confirmado': 'status-confirmado',
-          'cancelado': 'status-cancelado',
-          'realizado': 'status-realizado'
-        }[app.status] || 'bg-gray-100 text-gray-800';
-        const formattedDate = formatDate(app.date);
-        // Botões de ação baseados no status
-        let actionButtons = '';
-        if (app.status === 'pendente') {
-          actionButtons = `
-            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mt-4">
-              <button class="w-full bg-green-500 text-gray-900 font-bold py-2 rounded-lg hover:bg-green-400 transition duration-300 transform hover:scale-105"
-                onclick="updateAppointmentStatus('${app.docId}', 'confirmado')">
-                <i class="fas fa-check mr-2"></i> Confirmar
-              </button>
-              <button class="w-full bg-red-500 text-cream font-bold py-2 rounded-lg hover:bg-red-400 transition duration-300 transform hover:scale-105"
-                onclick="updateAppointmentStatus('${app.docId}', 'cancelado')">
-                <i class="fas fa-times mr-2"></i> Cancelar
-              </button>
-            </div>
-          `;
-        } else if (app.status === 'confirmado') {
-          actionButtons = `
-            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mt-4">
-              <button class="w-full bg-blue-500 text-cream font-bold py-2 rounded-lg hover:bg-blue-400 transition duration-300 transform hover:scale-105"
-                onclick="updateAppointmentStatus('${app.docId}', 'realizado')">
-                <i class="fas fa-check-double mr-2"></i> Realizado
-              </button>
-              <button class="w-full bg-red-500 text-cream font-bold py-2 rounded-lg hover:bg-red-400 transition duration-300 transform hover:scale-105"
-                onclick="updateAppointmentStatus('${app.docId}', 'cancelado')">
-                <i class="fas fa-times mr-2"></i> Cancelar
-              </button>
-            </div>
-          `;
-        }
-        const actionLinks = `
-          <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mt-4">
-            <a href="${createWhatsAppLink(app.phone, app.name, app.date, app.time, app.service, app.status)}" target="_blank"
-              class="w-full bg-green-500 text-gray-900 font-bold py-2 px-4 rounded-lg text-sm text-center hover:bg-green-400 transition duration-300 transform hover:scale-105 shadow-md">
-              <i class="fab fa-whatsapp mr-2"></i> WhatsApp
-            </a>
-            <button class="w-full bg-gray-600 text-cream font-bold py-2 rounded-lg hover:bg-gray-500 transition duration-300 transform hover:scale-105 shadow-md"
-              onclick="deleteAppointment('${app.docId}')">
-              <i class="fas fa-trash-alt mr-2"></i> Excluir
-            </button>
-          </div>
-        `;
-        list.innerHTML += `
-          <div class="dark-card p-6 rounded-2xl shadow-md hover:shadow-xl transition duration-200">
-            <div class="flex items-center justify-between mb-2">
-              <p class="text-xl font-bold text-cream">${app.name}</p>
-              <span class="status-badge ${statusClass}">${app.status}</span>
-            </div>
-            <div class="text-sm text-warm-gray space-y-1">
-              <p><i class="fas fa-cut w-5 text-yellow-400"></i> Serviço: <span class="font-semibold">${app.service}</span></p>
-              <p><i class="fas fa-dollar-sign w-5 text-yellow-400"></i> Preço: <span class="font-semibold">R$ ${servicePrices[app.service] ? servicePrices[app.service].toFixed(2).replace('.', ',') : 'N/A'}</span></p>
-              <p><i class="fas fa-calendar-alt w-5 text-yellow-400"></i> Data: <span class="font-semibold">${formattedDate}</span> às <span class="font-semibold">${app.time}</span></p>
-              <p><i class="fas fa-phone-alt w-5 text-yellow-400"></i> Telefone: <span class="font-semibold">${app.phone}</span></p>
-            </div>
-            ${actionButtons}
-            ${actionLinks}
-          </div>
-        `;
-      });
-    }
-    // Event Listeners
-    document.getElementById('close-modal-btn').addEventListener('click', () => {
-      document.getElementById('modal').classList.add('hidden');
-    });
-    // Navegação entre etapas do cliente
-    document.getElementById('next-step-1-btn').addEventListener('click', () => {
-      const nameInput = document.getElementById('client-name');
-      const phoneInput = document.getElementById('client-phone');
-      if (nameInput.value.trim() && phoneInput.value.trim()) {
-        appointmentData.name = nameInput.value.trim();
-        appointmentData.phone = phoneInput.value.trim();
-        showStep(2);
-        renderClientAppointments();
-      } else {
-        showModal('Por favor, preencha todos os campos corretamente.');
-      }
-    });
-    document.getElementById('back-step-2-btn').addEventListener('click', () => showStep(1));
-    document.getElementById('next-step-2-btn').addEventListener('click', () => showStep(3));
-    document.getElementById('back-step-3-btn').addEventListener('click', () => showStep(2));
-    document.getElementById('next-step-3-btn').addEventListener('click', submitAppointment);
-    // Input do telefone - atualizar lista quando mudado
-    document.getElementById('client-phone').addEventListener('blur', renderClientAppointments);
-    // Login do barbeiro
-    document.getElementById('login-barber-btn').addEventListener('click', () => {
-      const password = document.getElementById('barber-password').value;
-      if (password === BARBER_PASSWORD) {
-        document.getElementById('barber-login').classList.add('hidden');
-        document.getElementById('barber-appointments-panel').classList.remove('hidden');
-      } else {
-        showModal('Senha incorreta!');
-      }
-    });
-    // Modal para adicionar agendamento
-    document.getElementById('open-add-modal-btn').addEventListener('click', () => {
-      document.getElementById('barber-add-modal').classList.remove('hidden');
-    });
-    document.getElementById('close-add-modal-btn').addEventListener('click', () => {
-      document.getElementById('barber-add-modal').classList.add('hidden');
-      document.getElementById('barber-add-form').reset();
-    });
-    document.getElementById('barber-add-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const name = document.getElementById('barber-client-name').value;
-      const phone = document.getElementById('barber-client-phone').value;
-      const service = document.getElementById('barber-service-select').value;
-      const date = document.getElementById('barber-appointment-date').value;
-      const time = document.getElementById('barber-appointment-time').value;
-      const newAppointment = {
-        name,
-        phone,
-        service,
-        date,
-        time,
-        status: 'confirmado',
-        createdAt: new Date().toISOString()
-      };
-      try {
-        await addDoc(collection(db, 'appointments'), newAppointment);
-        showModal('Agendamento adicionado com sucesso!');
-        document.getElementById('barber-add-form').reset();
-        document.getElementById('barber-add-modal').classList.add('hidden');
-      } catch (error) {
-        console.error("Erro ao adicionar agendamento:", error);
-        showModal('Ocorreu um erro ao adicionar o agendamento. Verifique sua conexão.');
-      }
-    });
-    // Modal para gerenciar horários
-    document.getElementById('open-manage-slots-btn').addEventListener('click', () => {
-      document.getElementById('manage-slots-modal').classList.remove('hidden');
-    });
-    document.getElementById('close-manage-slots-btn').addEventListener('click', () => {
-      document.getElementById('manage-slots-modal').classList.add('hidden');
-      document.getElementById('block-date').value = '';
-      document.getElementById('block-time').value = '';
-    });
-    // Bloquear/Desbloquear horários
-    document.getElementById('block-btn').addEventListener('click', async () => {
-      const date = document.getElementById('block-date').value;
-      const time = document.getElementById('block-time').value;
-      if (!date || !time) {
-        showModal('Selecione uma data e um horário para bloquear.');
-        return;
-      }
-      try {
-        await addDoc(collection(db, 'blocked-slots'), { date, time });
-        showModal(`Horário ${time} na data ${formatDate(date)} foi bloqueado com sucesso!`);
-        document.getElementById('block-date').value = '';
-        document.getElementById('block-time').value = '';
-      } catch (error) {
-        console.error("Erro ao bloquear horário:", error);
-        showModal('Ocorreu um erro ao bloquear o horário. Verifique sua conexão.');
-      }
-    });
-    document.getElementById('unblock-btn').addEventListener('click', async () => {
-      const date = document.getElementById('block-date').value;
-      const time = document.getElementById('block-time').value;
-      if (!date || !time) {
-        showModal('Selecione uma data e um horário para desbloquear.');
-        return;
-      }
-      try {
-        const q = query(collection(db, 'blocked-slots'), where("date", "==", date), where("time", "==", time));
-        const querySnapshot = await getDocs(q);
-        if (!querySnapshot.empty) {
-          const deletePromises = [];
-          querySnapshot.forEach((docRef) => {
-            deletePromises.push(deleteDoc(docRef.ref));
-          });
-          await Promise.all(deletePromises);
-          showModal(`Horário ${time} na data ${formatDate(date)} foi desbloqueado com sucesso!`);
-          document.getElementById('block-date').value = '';
-          document.getElementById('block-time').value = '';
-        } else {
-          showModal('Este horário não está bloqueado.');
-        }
-      } catch (error) {
-        console.error("Erro ao desbloquear horário:", error);
-        showModal('Ocorreu um erro ao desbloquear o horário. Verifique sua conexão.');
-      }
-    });
-    // Login Analytics
-    document.getElementById('login-analytics-btn').addEventListener('click', () => {
-      const password = document.getElementById('analytics-password').value;
-      if (password === ANALYTICS_PASSWORD) {
-        document.getElementById('analytics-login').classList.add('hidden');
-        document.getElementById('analytics-dashboard').classList.remove('hidden');
-        initializeAnalytics();
-      } else {
-        showModal('Senha incorreta!');
-      }
-    });
-    // Funções Analytics
-    function initializeAnalytics() {
-      setupAnalyticsListener();
-      setDefaultDateRange();
-      setupFilterEvents();
-    }
-    function setupAnalyticsListener() {
-      const appointmentsColRef = collection(db, 'appointments');
-      onSnapshot(appointmentsColRef, (querySnapshot) => {
-        analyticsAppointments = [];
-        querySnapshot.forEach((doc) => {
-          analyticsAppointments.push({ docId: doc.id, ...doc.data() });
-        });
-        updateAnalytics();
-      }, (error) => {
-        console.error("Erro ao buscar agendamentos para análise:", error);
-      });
-    }
-    function setDefaultDateRange() {
-      const today = new Date();
-      const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
-      document.getElementById('end-date').value = today.toISOString().split('T')[0];
-      document.getElementById('start-date').value = lastMonth.toISOString().split('T')[0];
-    }
-    function setupFilterEvents() {
-      document.getElementById('period-filter').addEventListener('change', (e) => {
-        const period = e.target.value;
-        currentFilters.period = period;
-        const today = new Date();
-        let startDate, endDate;
-        switch(period) {
-          case 'today':
-            startDate = endDate = today.toISOString().split('T')[0];
-            break;
-          case 'week':
-            startDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7).toISOString().split('T')[0];
-            endDate = today.toISOString().split('T')[0];
-            break;
-          case 'month':
-            startDate = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
-            endDate = today.toISOString().split('T')[0];
-            break;
-          case 'custom':
-            return;
-          case 'all':
-          default:
-            startDate = endDate = null;
-            break;
-        }
-        if (startDate && endDate) {
-          document.getElementById('start-date').value = startDate;
-          document.getElementById('end-date').value = endDate;
-        } else {
-          document.getElementById('start-date').value = '';
-          document.getElementById('end-date').value = '';
-        }
-        updateAnalytics();
-      });
-      document.getElementById('apply-filters-btn').addEventListener('click', () => {
-        currentFilters.startDate = document.getElementById('start-date').value;
-        currentFilters.endDate = document.getElementById('end-date').value;
-        updateAnalytics();
-      });
-    }
-    function filterAppointmentsByPeriod(appointments) {
-      const startDate = document.getElementById('start-date').value;
-      const endDate = document.getElementById('end-date').value;
-      if (!startDate && !endDate) {
-        return appointments;
-      }
-      return appointments.filter(app => {
-        const appDate = app.date;
-        if (startDate && appDate < startDate) return false;
-        if (endDate && appDate > endDate) return false;
-        return true;
-      });
-    }
-    function updateAnalytics() {
-      const filteredAppointments = filterAppointmentsByPeriod(analyticsAppointments);
-      updateMainMetrics(filteredAppointments);
-      updateRevenueMetrics(filteredAppointments);
-    }
-    function updateMainMetrics(appointments) {
-      const total = appointments.length;
-      const confirmed = appointments.filter(app => app.status === 'confirmado').length;
-      const pending = appointments.filter(app => app.status === 'pendente').length;
-      const canceled = appointments.filter(app => app.status === 'cancelado').length;
-      const realized = appointments.filter(app => app.status === 'realizado').length;
-      document.getElementById('total-appointments').textContent = total;
-      document.getElementById('confirmed-appointments').textContent = confirmed;
-      document.getElementById('pending-appointments').textContent = pending;
-      document.getElementById('canceled-appointments').textContent = canceled;
-    }
-    function updateRevenueMetrics(appointments) {
-      const realizedRevenue = appointments
-        .filter(app => app.status === 'realizado')
-        .reduce((sum, app) => sum + (servicePrices[app.service] || 0), 0);
-      const estimatedRevenue = appointments
-        .filter(app => app.status === 'confirmado' || app.status === 'pendente')
-        .reduce((sum, app) => sum + (servicePrices[app.service] || 0), 0);
-      document.getElementById('realized-revenue').textContent = 
-        'R$ ' + realizedRevenue.toFixed(2).replace('.', ',');
-      document.getElementById('estimated-revenue').textContent = 
-        'R$ ' + estimatedRevenue.toFixed(2).replace('.', ',');
-    }
-    // Funções Globais para uso em onclick
-    window.updateAppointmentStatus = async (docId, newStatus) => {
-      const appointmentRef = doc(db, 'appointments', docId);
-      try {
-        await updateDoc(appointmentRef, { status: newStatus });
-        showModal("Status do agendamento atualizado com sucesso!");
-      } catch (error) {
-        console.error("Erro ao atualizar status:", error);
-        showModal("Erro ao atualizar o status do agendamento. Verifique sua conexão.");
-      }
-    };
-    window.deleteAppointment = async (docId) => {
-      if (!confirm('Tem certeza que deseja excluir este agendamento?')) {
-        return;
-      }
-      const appointmentRef = doc(db, 'appointments', docId);
-      try {
-        await deleteDoc(appointmentRef);
-        showModal("Agendamento excluído com sucesso!");
-      } catch (error) {
-        console.error("Erro ao excluir agendamento:", error);
-        showModal("Erro ao excluir o agendamento. Verifique sua conexão.");
-      }
-    };
-    window.createWhatsAppLink = (phone, name, date, time, service, status) => {
-      const formattedDate = formatDate(date);
-      const statusMessage = {
-        'pendente': `Olá ${name}, recebemos seu pedido de agendamento para ${service} no dia ${formattedDate} às ${time}. Assim que for confirmado, te avisaremos!`,
-        'confirmado': `Olá ${name}, seu agendamento para ${service} no dia ${formattedDate} às ${time} foi CONFIRMADO! Estamos te esperando.`,
-        'cancelado': `Olá ${name}, infelizmente precisamos CANCELAR seu agendamento para ${service} no dia ${formattedDate} às ${time}. Por favor, entre em contato para reagendar.`,
-        'realizado': `Olá ${name}, seu agendamento para ${service} no dia ${formattedDate} às ${time} foi REALIZADO! Obrigado pela preferência!`
-      }[status];
-      const message = encodeURIComponent(statusMessage);
-      return `https://wa.me/${phone}?text=${message}`;
-    };
-    // Inicialização
-    document.addEventListener('DOMContentLoaded', () => {
-      console.log('DOM carregado, inicializando aplicação...');
-      // Verificar view da URL
-      checkURLView();
-      // Configurar Firebase listeners
-      setupFirebaseListeners();
-      // Configurar listener para mudanças na URL
-      window.addEventListener('popstate', checkURLView);
-      console.log('Aplicação inicializada com sucesso!');
-    });
-  </script>
-</body>
-</html>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chalé Guadalupe - App</title>
+    
+    <!-- Fonts: Outfit (Moderna e Geométrica) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons: FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- QR Code Libs (Fidelidade) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#580808',  /* Vinho Escuro */
+                            main: '#9F0402',  /* Vermelho Original */
+                            light: '#C62E2E',
+                            accent: '#FF9001', /* Laranja Original */
+                            gold: '#FFD700',
+                            surface: '#FDF2F2'
+                        }
+                    },
+                    animation: {
+                        'stamp': 'stamp-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-glow': 'pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'slide-up': 'slide-up 0.3s ease-out forwards',
+                        'fade-in': 'fade-in 0.3s ease-out forwards',
+                    },
+                    keyframes: {
+                        'stamp-in': {
+                            '0%': { transform: 'scale(2) rotate(45deg)', opacity: '0' },
+                            '100%': { transform: 'scale(1) rotate(0)', opacity: '1' }
+                        },
+                        'float': {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        'pulse-glow': {
+                            '0%, 100%': { opacity: '1', boxShadow: '0 0 20px rgba(255, 144, 1, 0.5)' },
+                            '50%': { opacity: '.8', boxShadow: '0 0 10px rgba(255, 144, 1, 0.2)' },
+                        },
+                        'slide-up': {
+                            '0%': { transform: 'translateY(100%)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        'fade-in': {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background: #f8f8f8; /* Base clara para o cardápio */
+            height: 100dvh; 
+            overflow: hidden;
+            color: #1f2937;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Background Dinâmico para aba Fidelidade */
+        .bg-loyalty {
+            background: radial-gradient(circle at top right, #9F0402, #2a0505);
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -1;
+            transition: opacity 0.5s ease;
+            opacity: 0;
+        }
+        
+        .active-loyalty .bg-loyalty {
+            opacity: 1;
+        }
+
+        /* Glassmorphism Genérico */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-glass {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+        }
+
+        /* Tabs de Categoria do Cardápio */
+        .category-scroll {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .category-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Estilos do Cartão Fidelidade (Stamp) */
+        .stamp-slot {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .stamp-slot::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 2px dashed #cbd5e1;
+            z-index: 0;
+        }
+        .stamp-filled::before {
+            border: 2px solid #FF9001;
+            background: #fff7ed;
+        }
+
+        /* Scanner */
+        .scanner-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border: 40px solid rgba(0,0,0,0.6);
+            z-index: 10;
+        }
+        .scan-line {
+            width: 100%; height: 2px; background: #FF9001;
+            position: absolute; top: 0;
+            animation: scan 2s linear infinite;
+            box-shadow: 0 0 4px #FF9001;
+        }
+        @keyframes scan {
+            0% { top: 0; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+    </style>
+</head>
+<body class="transition-colors duration-300 flex flex-col">
+
+    <!-- Background Layer for Loyalty Mode -->
+    <div class="bg-loyalty"></div>
+
+    <!-- Header / Navigation -->
+    <header class="w-full z-40 bg-white shadow-sm border-b border-gray-100 transition-all duration-300 shrink-0" id="main-header">
+        <div class="max-w-md mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-brand-main flex items-center justify-center text-white font-bold text-xs shadow-md">
+                    CG
+                </div>
+                <h1 class="text-lg font-bold text-gray-800 tracking-tight" id="header-title">Chalé Guadalupe</h1>
+            </div>
+            
+            <!-- Tab Switcher -->
+            <div class="flex bg-gray-100 rounded-full p-1 relative">
+                <div id="tab-highlighter" class="absolute top-1 left-1 w-[calc(50%-4px)] h-[calc(100%-8px)] bg-white rounded-full shadow-sm transition-all duration-300 transform translate-x-0"></div>
+                
+                <button onclick="switchTab('menu')" class="relative z-10 px-4 py-1.5 text-xs font-bold text-brand-main rounded-full transition-colors duration-300" id="tab-menu">
+                    Cardápio
+                </button>
+                <button onclick="switchTab('loyalty')" class="relative z-10 px-4 py-1.5 text-xs font-bold text-gray-500 rounded-full transition-colors duration-300" id="tab-loyalty">
+                    Fidelidade
+                </button>
+            </div>
+        </div>
+
+        <!-- Categories Bar (Only visible in Menu) -->
+        <div id="categories-bar" class="w-full overflow-x-auto category-scroll px-4 pb-3 pt-1 flex gap-2 max-w-md mx-auto border-b border-gray-100/50">
+            <!-- Injected by JS -->
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="w-full max-w-md mx-auto relative px-4 z-10 flex-1 overflow-y-auto pb-24">
+        
+        <!-- === VIEW: CARDÁPIO === -->
+        <section id="menu-view" class="animate-fade-in pt-6">
+            <!-- Hero Banner (Optional, small) -->
+            <div class="bg-gradient-to-r from-brand-main to-brand-dark rounded-2xl p-4 mb-6 text-white shadow-lg relative overflow-hidden">
+                <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-brand-accent/30 rounded-full blur-xl"></div>
+                <h2 class="text-xl font-bold relative z-10">Sabores do México</h2>
+                <p class="text-xs text-white/80 relative z-10">Faça seu pedido e consulte seu Cartão Fidelidade.</p>
+            </div>
+
+            <!-- Products Grid -->
+            <div id="products-grid" class="grid grid-cols-1 gap-4">
+                <!-- Products Injected JS -->
+            </div>
+        </section>
+
+
+        <!-- === VIEW: FIDELIDADE (FidCaard Logic) === -->
+        <section id="loyalty-view" class="hidden animate-fade-in flex flex-col items-center gap-6 pt-4">
+            
+            <!-- Brand Header (Specific to Loyalty Look) -->
+            <div class="text-center animate-float mb-2">
+                <div class="relative w-20 h-20 mx-auto mb-3">
+                    <div class="absolute inset-0 bg-brand-accent rounded-full blur-md opacity-50"></div>
+                    <img src="https://framerusercontent.com/assets/e3aP9WnpRlweFQB6L7ZfaOLvk.png" alt="Logo" class="relative w-full h-full object-cover rounded-full border-4 border-white/20 shadow-lg">
+                </div>
+                <p class="text-white/80 text-sm font-light">Bem Vindo ao seu Cartão Fidelidade</p>
+            </div>
+
+            <!-- LOADING STATE -->
+            <div id="loading-state" class="glass-panel w-full rounded-3xl p-8 flex flex-col items-center justify-center min-h-[200px]">
+                <div class="w-10 h-10 border-4 border-brand-accent border-t-transparent rounded-full animate-spin mb-4"></div>
+                <p class="text-gray-500 font-medium animate-pulse text-sm">Sincronizando...</p>
+            </div>
+
+            <!-- CLIENT VIEW -->
+            <div id="client-view" class="w-full hidden flex-col gap-6">
+                
+                <!-- Digital Card -->
+                <div id="card-content" class="glass-panel w-full rounded-[32px] p-6 relative overflow-hidden hidden">
+                    <div class="absolute -top-10 -right-10 w-32 h-32 bg-brand-light/10 rounded-full blur-2xl"></div>
+                    
+                    <div class="flex justify-between items-end mb-6 relative z-10">
+                        <div>
+                            <span class="text-xs font-bold text-brand-main uppercase tracking-wider block mb-1">Seu Progresso</span>
+                            <div id="status-text-container"></div>
+                        </div>
+                        <button id="view-prize-btn" class="bg-brand-accent/10 hover:bg-brand-accent/20 px-3 py-2 rounded-full border border-brand-accent/20 transition-all active:scale-95 flex items-center gap-2">
+                            <i class="fa-solid fa-gift text-brand-accent animate-bounce"></i>
+                            <span class="text-xs font-bold text-brand-dark">Prêmio</span>
+                        </button>
+                    </div>
+
+                    <div id="points-grid" class="grid grid-cols-5 gap-3 mb-8 relative z-10"></div>
+
+                    <!-- Prize Box -->
+                    <div id="prize-container" class="hidden w-full bg-gradient-to-r from-brand-accent to-yellow-400 p-4 rounded-2xl text-center shadow-lg transform transition-all duration-500 hover:scale-105 cursor-pointer relative overflow-hidden group mb-4">
+                        <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 skew-y-12"></div>
+                        <div class="relative z-10 text-white">
+                            <div class="text-xs font-bold uppercase tracking-widest mb-1 opacity-90">Prêmio Disponível</div>
+                            <h2 class="text-xl font-extrabold leading-tight shadow-black drop-shadow-sm prize-display-text"></h2>
+                            <div class="mt-3 bg-white text-brand-accent text-xs font-bold py-2 px-4 rounded-full inline-block shadow-sm">
+                                Resgatar Agora
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-2 pt-4 border-t border-dashed border-gray-300 flex justify-between items-center opacity-60 hover:opacity-100 transition-opacity">
+                        <div class="text-[10px] text-gray-500 leading-tight">
+                            ID de Backup<br>
+                            <span class="text-[8px]">Para recuperar pontos</span>
+                        </div>
+                        <div id="backup-code" class="font-mono text-lg font-bold text-gray-400 tracking-widest select-all">------</div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <button id="generate-qrcode-btn" class="w-full bg-white text-brand-main font-bold text-lg py-4 px-6 rounded-2xl shadow-xl hover:shadow-2xl hover:bg-gray-50 active:scale-95 transition-all duration-200 flex items-center justify-between group">
+                    <span class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-brand-main text-white flex items-center justify-center group-hover:rotate-12 transition-transform">
+                            <i class="fa-solid fa-qrcode"></i>
+                        </div>
+                        <span class="flex flex-col text-left leading-tight">
+                            <span>Pontuar</span>
+                            <span class="text-xs font-normal text-gray-500">Gerar QR Code</span>
+                        </span>
+                    </span>
+                    <i class="fa-solid fa-chevron-right text-gray-300"></i>
+                </button>
+
+                <button id="redeem-btn" class="hidden w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold text-lg py-4 px-6 rounded-2xl shadow-lg shadow-green-500/30 animate-pulse-glow hover:scale-[1.02] transition-transform flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-gift"></i>
+                    Usar Prêmio
+                </button>
+                
+                <div class="flex gap-2">
+                    <button id="recover-points-btn" class="flex-1 bg-white/10 backdrop-blur text-white text-xs font-medium py-3 rounded-xl hover:bg-white/20 transition">
+                        Recuperar Pontos
+                    </button>
+                </div>
+            </div>
+
+            <!-- CASHIER VIEW (Hidden by default) -->
+            <div id="cashier-view" class="hidden w-full flex-col items-center">
+                <div class="glass-panel w-full rounded-3xl p-6 text-center">
+                    <div class="mb-4 inline-block p-3 bg-brand-main/10 rounded-full text-brand-main">
+                        <i class="fa-solid fa-cash-register text-2xl"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-gray-800">Modo Atendente</h2>
+                    <p class="text-sm text-gray-500 mb-6">Escaneie o QR do cliente</p>
+
+                    <div id="scanner-container" class="relative w-full aspect-square bg-gray-900 rounded-2xl overflow-hidden shadow-inner mb-6">
+                        <div id="scanner-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-gray-500">
+                            <i class="fa-solid fa-camera text-4xl mb-2 opacity-50"></i>
+                            <span class="text-xs uppercase tracking-wider">Câmera desligada</span>
+                        </div>
+                        <video id="scanner-video" class="hidden w-full h-full object-cover"></video>
+                        <canvas id="scanner-canvas" class="hidden"></canvas>
+                        <div id="scan-overlay" class="hidden scanner-overlay pointer-events-none">
+                            <div class="scan-line"></div>
+                        </div>
+                    </div>
+
+                    <p id="scan-feedback" class="h-12 flex items-center justify-center text-sm font-bold transition-all mb-4"></p>
+
+                    <button id="start-scan-btn" class="w-full bg-brand-main text-white font-bold py-3 rounded-xl hover:bg-brand-dark transition shadow-lg">
+                        <i class="fa-solid fa-camera mr-2"></i> Iniciar Scanner
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+
+    <!-- === FLOATING CART BUTTON (Menu Only) === -->
+    <div id="floating-cart" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-30 translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <button onclick="openCartModal()" class="bg-brand-main text-white rounded-full pl-6 pr-2 py-2 flex items-center gap-4 shadow-xl hover:scale-105 active:scale-95 transition-transform min-w-[240px] justify-between border border-white/20 backdrop-blur-md">
+            <div class="flex flex-col items-start text-xs">
+                <span class="font-bold uppercase tracking-wide opacity-80">Meu Pedido</span>
+                <span id="cart-total-display" class="font-bold text-base">R$ 0,00</span>
+            </div>
+            <div class="bg-white text-brand-main w-10 h-10 rounded-full flex items-center justify-center font-bold shadow-sm" id="cart-count-display">0</div>
+        </button>
+    </div>
+
+
+    <!-- === MODALS (Unified Design) === -->
+
+    <!-- 1. Product Options Modal -->
+    <div id="options-modal" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center pointer-events-none">
+        <div class="absolute inset-0 dark-glass opacity-0 transition-opacity duration-300 pointer-events-auto" onclick="closeOptionsModal()" id="options-bg"></div>
+        <div class="bg-white w-full max-w-md rounded-t-[32px] sm:rounded-[32px] p-0 relative z-10 shadow-2xl transform translate-y-full transition-transform duration-300 flex flex-col max-h-[90vh] pointer-events-auto" id="options-content">
+            
+            <!-- Header Image -->
+            <div class="h-40 w-full relative shrink-0">
+                <img id="modal-img" src="" class="w-full h-full object-cover rounded-t-[32px]">
+                <button onclick="closeOptionsModal()" class="absolute top-4 right-4 w-8 h-8 bg-black/30 backdrop-blur text-white rounded-full flex items-center justify-center">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+                <div class="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-white to-transparent"></div>
+            </div>
+
+            <!-- Body (Scrollable) -->
+            <div class="px-6 pb-4 overflow-y-auto flex-1">
+                <h3 id="modal-title" class="text-2xl font-bold text-brand-dark mb-1 leading-tight"></h3>
+                <p id="modal-desc" class="text-sm text-gray-500 mb-6 leading-relaxed"></p>
+                
+                <div id="modal-options-container" class="space-y-6">
+                    <!-- Options injected JS -->
+                </div>
+            </div>
+
+            <!-- Footer (Fixed) -->
+            <div class="p-6 border-t border-gray-100 bg-white rounded-b-[32px]">
+                <div class="flex items-center justify-between gap-4 mb-4">
+                    <div class="flex items-center bg-gray-100 rounded-full p-1">
+                        <button class="w-8 h-8 flex items-center justify-center text-brand-main font-bold" onclick="updateQty(-1)">-</button>
+                        <span id="modal-qty" class="w-8 text-center font-bold text-gray-800">1</span>
+                        <button class="w-8 h-8 flex items-center justify-center text-brand-main font-bold" onclick="updateQty(1)">+</button>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-[10px] text-gray-400 uppercase font-bold">Total do item</div>
+                        <div id="modal-price" class="text-xl font-bold text-brand-main">R$ 0,00</div>
+                    </div>
+                </div>
+                <button onclick="addToCart()" class="w-full bg-brand-main text-white font-bold py-3.5 rounded-xl shadow-lg shadow-brand-main/20 active:scale-95 transition-all">
+                    Adicionar ao Pedido
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Cart Modal -->
+    <div id="cart-modal" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center pointer-events-none">
+        <div class="absolute inset-0 dark-glass opacity-0 transition-opacity duration-300 pointer-events-auto" onclick="closeCartModal()" id="cart-bg"></div>
+        <div class="bg-brand-surface w-full max-w-md rounded-t-[32px] sm:rounded-[32px] relative z-10 shadow-2xl transform translate-y-full transition-transform duration-300 flex flex-col max-h-[90vh] pointer-events-auto h-[85vh]" id="cart-content">
+            
+            <div class="bg-white p-4 rounded-t-[32px] border-b border-gray-100 flex justify-between items-center sticky top-0 z-10">
+                <h3 class="text-lg font-bold text-brand-dark flex items-center gap-2">
+                    <i class="fa-solid fa-basket-shopping text-brand-main"></i> Seu Carrinho
+                </h3>
+                <button onclick="closeCartModal()" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-times text-xl"></i></button>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-4 space-y-4" id="cart-body">
+                <!-- Cart Items -->
+                <div id="cart-items-list" class="space-y-3"></div>
+                
+                <!-- Checkout Form -->
+                <div id="checkout-form" class="bg-white p-5 rounded-2xl shadow-sm space-y-4 hidden">
+                    <h4 class="font-bold text-gray-800 text-sm border-b pb-2 mb-2">Detalhes do Pedido</h4>
+                    
+                    <div>
+                        <label class="text-xs font-bold text-gray-500">Tipo de Entrega</label>
+                        <div class="flex gap-2 mt-1">
+                            <label class="flex-1 border rounded-lg p-2 flex items-center gap-2 cursor-pointer has-[:checked]:border-brand-main has-[:checked]:bg-brand-main/5 has-[:checked]:text-brand-main">
+                                <input type="radio" name="deliveryType" value="delivery" checked class="hidden" onchange="toggleDeliveryFields()">
+                                <i class="fa-solid fa-motorcycle"></i> Entrega
+                            </label>
+                            <label class="flex-1 border rounded-lg p-2 flex items-center gap-2 cursor-pointer has-[:checked]:border-brand-main has-[:checked]:bg-brand-main/5 has-[:checked]:text-brand-main">
+                                <input type="radio" name="deliveryType" value="pickup" class="hidden" onchange="toggleDeliveryFields()">
+                                <i class="fa-solid fa-store"></i> Retirada
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Common Fields -->
+                    <input type="text" id="cust-name" placeholder="Seu Nome" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm focus:outline-none focus:border-brand-main">
+
+                    <!-- Delivery Only Fields -->
+                    <div id="delivery-address-group" class="space-y-3">
+                        <div class="flex gap-2">
+                            <input type="text" id="cust-cep" placeholder="CEP" class="w-1/3 bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm" onkeyup="checkCep(this.value)">
+                            <input type="text" id="cust-address" placeholder="Endereço" class="flex-1 bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm">
+                        </div>
+                        <input type="text" id="cust-number" placeholder="Número / Comp." class="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm">
+                    </div>
+
+                    <!-- Observation Field (Common) -->
+                    <textarea id="cust-obs" placeholder="Observação (Ex: Sem cebola, campainha não funciona...)" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm h-20 resize-none focus:outline-none focus:border-brand-main"></textarea>
+
+                    <div>
+                        <label class="text-xs font-bold text-gray-500">Pagamento</label>
+                        <select id="cust-payment" class="w-full mt-1 bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm" onchange="togglePaymentFields()">
+                            <option value="Pix">Pix</option>
+                            <option value="Cartão Crédito">Cartão de Crédito</option>
+                            <option value="Cartão Débito">Cartão de Débito</option>
+                            <option value="Dinheiro">Dinheiro</option>
+                        </select>
+                    </div>
+
+                    <!-- Change Field (Cash Only) -->
+                    <div id="change-group" class="hidden animate-slide-up">
+                        <label class="text-xs font-bold text-gray-500">Troco para quanto?</label>
+                        <input type="tel" id="cust-change" placeholder="Ex: 50,00" class="w-full mt-1 bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-sm text-brand-dark font-bold placeholder-gray-400 focus:outline-none focus:border-brand-accent">
+                    </div>
+                </div>
+                
+                <div id="empty-cart-msg" class="text-center py-10 text-gray-400 hidden">
+                    <i class="fa-solid fa-basket-shopping text-4xl mb-3 opacity-20"></i>
+                    <p>Seu carrinho está vazio</p>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 border-t border-gray-100 rounded-b-[32px] shadow-[0_-5px_15px_rgba(0,0,0,0.05)] z-20">
+                <div class="space-y-1 mb-4 text-sm">
+                    <div class="flex justify-between text-gray-500"><span>Subtotal</span><span id="cart-subtotal">R$ 0,00</span></div>
+                    <div class="flex justify-between text-gray-500"><span>Taxa Entrega</span><span id="cart-delivery">R$ 0,00</span></div>
+                    <div class="flex justify-between text-lg font-bold text-brand-dark pt-2 border-t mt-2"><span>Total</span><span id="cart-final">R$ 0,00</span></div>
+                </div>
+                <button onclick="sendWhatsapp()" class="w-full bg-[#25D366] text-white font-bold py-3.5 rounded-xl shadow-lg hover:bg-[#1ebd59] active:scale-95 transition-all flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-whatsapp text-xl"></i> Enviar Pedido
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Prize Modal (Loyalty) -->
+    <div id="prize-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="absolute inset-0 dark-glass" onclick="document.getElementById('prize-modal').classList.add('hidden')"></div>
+        <div class="bg-white rounded-[32px] p-8 w-full max-w-sm relative z-10 shadow-2xl animate-stamp flex flex-col items-center text-center">
+            <div class="w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center mb-6 shadow-inner">
+                <i class="fa-solid fa-utensils text-4xl text-brand-accent"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-brand-main mb-2">Prêmio da Rodada</h3>
+            <div class="w-16 h-1 bg-brand-accent rounded-full mb-6"></div>
+            <p class="text-gray-500 text-sm mb-2 uppercase tracking-wide">Você vai ganhar:</p>
+            <h2 class="text-2xl font-extrabold text-gray-800 leading-tight mb-6 prize-display-text"></h2>
+            <p class="text-gray-400 text-xs mb-8 italic">Complete os 5 selos para liberar esta recompensa.</p>
+            <button onclick="document.getElementById('prize-modal').classList.add('hidden')" class="w-full bg-gray-100 text-gray-800 font-bold py-3 rounded-xl hover:bg-gray-200 transition">
+                Legal, quero ganhar!
+            </button>
+        </div>
+    </div>
+
+    <!-- 4. QR Code Modal (Loyalty) -->
+    <div id="qrcode-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="absolute inset-0 dark-glass" onclick="document.getElementById('qrcode-modal').classList.add('hidden')"></div>
+        <div class="bg-white rounded-[32px] p-8 w-full max-w-sm relative z-10 shadow-2xl animate-stamp flex flex-col items-center">
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Seu Código</h3>
+            <p class="text-gray-500 text-sm mb-6 text-center">Mostre para o atendente ao fechar a conta no estabelecimento</p>
+            <div class="p-4 bg-white border-2 border-dashed border-gray-200 rounded-2xl mb-6 shadow-sm">
+                <canvas id="qrcode-canvas" class="block w-full rounded-lg"></canvas>
+            </div>
+            <button onclick="document.getElementById('qrcode-modal').classList.add('hidden')" class="text-gray-500 hover:text-gray-800 font-medium text-sm py-2 px-6">Fechar</button>
+        </div>
+    </div>
+
+    <!-- 5. Recover Modal -->
+    <div id="recover-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="absolute inset-0 dark-glass"></div>
+        <div class="bg-white rounded-[32px] p-8 w-full max-w-sm relative z-10 shadow-2xl">
+            <h3 class="text-xl font-bold text-gray-800 mb-2 text-center">Recuperar Conta</h3>
+            <p class="text-gray-500 text-sm mb-6 text-center">Digite o ID do Cartão</p>
+            <input id="recover-code-input" type="text" placeholder="Ex: 123456" class="w-full p-4 bg-gray-50 border-2 border-gray-200 rounded-xl text-center font-mono text-xl tracking-widest uppercase mb-4 focus:border-brand-main focus:outline-none">
+            <p id="recover-feedback" class="text-center text-sm font-bold mb-4 hidden"></p>
+            <div class="flex flex-col gap-3">
+                <button id="confirm-recover-btn" class="w-full bg-brand-dark text-white font-bold py-3 rounded-xl">Restaurar</button>
+                <button onclick="document.getElementById('recover-modal').classList.add('hidden')" class="w-full text-gray-500 font-bold py-2">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. Redeem Confirmation Modal -->
+    <div id="redeem-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="absolute inset-0 dark-glass"></div>
+        <div class="bg-white rounded-[32px] p-6 w-full max-w-sm relative z-10 shadow-2xl animate-stamp text-center">
+            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 text-green-600 text-3xl"><i class="fa-solid fa-gift"></i></div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Usar Recompensa?</h3>
+            <p class="text-gray-500 text-sm mb-6">Ao confirmar, seus pontos serão zerados e o desconto aplicado.</p>
+            <div class="flex flex-col gap-3">
+                <button id="confirm-redeem-btn" class="w-full bg-brand-main text-white font-bold py-3 rounded-xl shadow-lg">Sim, Resgatar!</button>
+                <button onclick="document.getElementById('redeem-modal').classList.add('hidden')" class="w-full bg-gray-100 text-gray-600 font-bold py-3 rounded-xl">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script type="module">
+        // Import Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, onSnapshot, updateDoc, increment } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- DATA & CONFIG ---
+        const STORES = [
+            { id: 1, name: "La Encasa - Loja Centro", whatsapp: "5516991421704" }
+        ];
+        const DELIVERY_ZONES = {
+            "14010": 5.00, "14015": 6.00, "14020": 7.50, "14021": 8.00, "default": 10.00
+        };
+        const PRODUCTS = [
+            { id: 1, name: "Nachos Chilli", description: "Sequinhas tortilhas de milho chips, acompanhadas com delicioso chilli de carne moída e cheddar.", price: 28.68, image: "https://static.ifood-static.com.br/image/upload/t_medium/pratos/7d1ebf3c-fc6a-4235-821f-1860bccaffad/202109132014_1224_i.jpg", category: "Entrada" },
+            { 
+                id: 2, name: "2 Tacos Mexican", description: "Tortilhas de trigo gratinadas, servido com nossos molhos e o recheio que desejar", price: 21.60, image: "https://static.ifood-static.com.br/image/upload/t_medium/pratos/7d1ebf3c-fc6a-4235-821f-1860bccaffad/202003212202_CWSo_t.jpg", category: "Principal",
+                options: [{ 
+                    title: "Recheio", subtitle: "Escolha até 2 opções", type: "checkbox", max: 2, 
+                    items: [
+                         { name: "Al pastor - Carne suína", price: 0 },
+                        { name: "Chili de carne moída", price: 0 },
+                        { name: "Frango Agridoce", price: 0 },
+                         { name: "Paleta Bovina", price: 0 }
+                     ] 
+                }]
+            },
+            { 
+                id: 3, name: "2 Burritos", description: "Tortilha de trigo 16cm rechada e gratinada. Acompanha guacamole e salsa.", price: 29.50, image: "https://anamariabrogui.com.br/assets/uploads/receitas/fotos/usuario-2847-e7b65a5775641aa780fa2b34b5a624e4.jpg", category: "Principal",
+                options: [{ 
+                    title: "Recheio", subtitle: "Escolha até 2 opções", type: "checkbox", max: 2, 
+                    items: [{ name: "Barbacoa", price: 0 }, { name: "Chili", price: 0 }, { name: "Veggie", price: 0 }] 
+                }]
+            },
+            { id: 4, name: "Nachos Frango", description: "Tortilhas de milho chips, acompanhadas com frango, cheddar e bacon.", price: 28.68, image: "https://assets.tmecosys.com/image/upload/t_web_rdp_recipe_584x480_1_5x/img/recipe/ras/Assets/09ADC2F0-6DCA-4C04-ABDC-25F9E771DA4E/Derivates/AD23C769-B1FA-486D-9CE5-38B7E7E106BC.jpg", category: "Entrada" },
+            { 
+                id: 5, name: "Combo Guadalupe", description: "Nachos, nuggets, batatas com cheddar, 4 burritos, 4 tacos e molhos.", price: 135.80, image: "https://static.ifood-static.com.br/image/upload/t_medium/pratos/7d1ebf3c-fc6a-4235-821f-1860bccaffad/201903142151_comb.jpeg", category: "Combo",
+                options: [
+                    { title: "Burrito", subtitle: "Selecione 4", type: "checkbox", max: 4, items: [{ name: "Al pastor", price: 0 }, { name: "Chilli", price: 0 }] },
+                    { title: "Taco", subtitle: "Escolha 4", type: "checkbox", max: 4, items: [{ name: "Al pastor", price: 0 }, { name: "Chilli", price: 6.00 }] }
+                ]
+            },
+            { 
+                id: 6, name: "Batata Frita", description: "Porção generosa de batata frita crocante.", price: 0, image: "https://images.unsplash.com/photo-1541592106381-b65b60662604?auto=format&fit=crop&w=435", category: "Entrada",
+                options: [
+                    { title: "Tamanho", subtitle: "Selecione uma opção", type: "radio", required: true, items: [{ name: "Pequena", price: 10.00 }, { name: "Média", price: 15.00 }, { name: "Grande", price: 20.00 }] },
+                    { title: "Adicionais", subtitle: "Opcional", type: "checkbox", max: 2, items: [{ name: "Bacon", price: 5.00 }, { name: "Cheddar", price: 6.00 }] }
+                ]
+            },
+            { id: 7, name: "Mini Churros", description: "Com doce de leite.", price: 12.00, image: "https://www.portonovoalimentos.com.br/medias/news/depositphotos-406675082-xl.jpg?w=600&h=auto&fit=fit&crop=center", category: "Sobremesa" }
+        ];
+
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyB_l_KIgNlxrmR2gSVW81EGGTrUQS0JYFc",
+            authDomain: "fidelcard-d216d.firebaseapp.com",
+            projectId: "fidelcard-d216d",
+            storageBucket: "fidelcard-d216d.firebasestorage.app",
+            messagingSenderId: "1037656229354",
+            appId: "1:1037656229354:web:d444f2bcc4ccaa0fa01e93"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // --- GLOBAL STATE ---
+        let currentTab = 'menu';
+        let cart = [];
+        let currentCategory = 'all';
+        let currentOptionsProduct = null;
+        let deliveryFee = 0;
+        let deliveryType = 'delivery';
+        let currentUserId = null;
+        let unsubscribeCardListener = null;
+
+        // --- UI UTILS ---
+        window.switchTab = (tab) => {
+            currentTab = tab;
+            const menuView = document.getElementById('menu-view');
+            const loyaltyView = document.getElementById('loyalty-view');
+            const tabMenu = document.getElementById('tab-menu');
+            const tabLoyalty = document.getElementById('tab-loyalty');
+            const highlighter = document.getElementById('tab-highlighter');
+            const categoriesBar = document.getElementById('categories-bar');
+            const body = document.body;
+
+            if (tab === 'menu') {
+                menuView.classList.remove('hidden');
+                loyaltyView.classList.add('hidden');
+                tabMenu.classList.replace('text-gray-500', 'text-brand-main');
+                tabLoyalty.classList.replace('text-brand-main', 'text-gray-500');
+                highlighter.style.transform = 'translateX(0)';
+                categoriesBar.classList.remove('hidden');
+                body.classList.remove('active-loyalty');
+                document.getElementById('floating-cart').style.display = 'block';
+            } else {
+                menuView.classList.add('hidden');
+                loyaltyView.classList.remove('hidden');
+                tabMenu.classList.replace('text-brand-main', 'text-gray-500');
+                tabLoyalty.classList.replace('text-gray-500', 'text-brand-main');
+                highlighter.style.transform = 'translateX(100%)';
+                categoriesBar.classList.add('hidden');
+                body.classList.add('active-loyalty');
+                document.getElementById('floating-cart').style.display = 'none';
+            }
+        };
+
+        // --- MENU LOGIC ---
+
+        function renderCategories() {
+            const categories = ['Todos', 'Entrada', 'Principal', 'Sobremesa', 'Combo'];
+            const container = document.getElementById('categories-bar');
+            container.innerHTML = categories.map(cat => {
+                const isActive = (cat === 'Todos' && currentCategory === 'all') || cat === currentCategory;
+                return `<button onclick="window.filterCategory('${cat}')" 
+                    class="whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${isActive ? 'bg-brand-main text-white shadow-md' : 'bg-white text-gray-500 border border-gray-100'}">
+                    ${cat}
+                </button>`;
+           
